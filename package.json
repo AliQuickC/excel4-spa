@@ -1,0 +1,56 @@
+{
+  "name": "excel-course4",
+  "version": "1.0.0",
+  "description": "TS Excel Application",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=development webpack serve --mode development",
+    "build-dev": "cross-env NODE_ENV=development webpack --mode development",
+    "build-prod": "cross-env NODE_ENV=production webpack --mode production",
+    "lint": "eslint . --ext .ts",
+    "lintfix": "eslint . --ext .ts --fix",
+    "clear": "rd /s /q dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AliQuickC/excel4-spa.git"
+  },
+  "keywords": [
+    "ts",
+    "js",
+    "excel"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AliQuickC/excel4-spa/issues"
+  },
+  "homepage": "https://github.com/AliQuickC/excel4-spa#readme",
+  "private": true,
+  "browserslist": "> 0.25%, not dead",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.22.0",
+    "eslint-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "node-sass": "^7.0.3",
+    "postcss": "^8.4.17",
+    "postcss-loader": "^7.0.1",
+    "postcss-preset-env": "^7.8.2",
+    "sass-loader": "^13.1.0",
+    "ts-loader": "^9.4.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1"
+  }
+}
