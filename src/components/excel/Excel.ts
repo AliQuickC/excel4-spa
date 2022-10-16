@@ -30,6 +30,5 @@ export class Excel {
 	public render(): void {
 		this.$parentEl.append(this.getRoot());
 		this.components.forEach(component => component.init());
-		// this.components.forEach(component => component.destroy());
 	}
 }

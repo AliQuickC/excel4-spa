@@ -40,7 +40,6 @@ export abstract class DomListener {
 		});
 	}
 
-
 	// protected _triggerEvent(eventName: string, event: object) { // универсальная ф-ция вызова различных событий
 	// 	// if (!(this.listeners)) { // если объект listeners не существует
 	// 	// 	this.listeners = {}; // создаем его
