@@ -1,3 +1,5 @@
+interface Style {[key: string]: string}
+
 export class Dom {
 	$el: HTMLElement;
 	constructor(selector: string | HTMLElement) {
@@ -58,20 +60,19 @@ export class Dom {
 		return this.$el.querySelectorAll(selector);
 	}
 
-	css(styles: {[key: string]: string}) { // преобразует стили из объекта в css свойство
+	css<T extends CSSStyleDeclaration, K extends keyof T>(styles: {[key: string]: string}): void { // преобразует стили из объекта в css свойство
 		Object
 			.keys(styles)
-			.forEach((key): void => (this.$el.style as any)[key] = (styles as any)[key]);
+			.forEach((key) => (<T>(this.$el.style))[key as K] = (styles)[key] as T[K]);
 	}
 
-	getStyles(styles: Array<string> = []) { // считывает css стили DOM элемента, сохраняем в объект
+	getStyles(styles: Array<string> = []): Style { // считывает css стили DOM элемента, сохраняем в объект
 		// для каждого свойства(элемента массива), считывает css значение
-		return styles.reduce((res, s) => {
-			(res as any)[s] = (this.$el.style as any)[s]; // формируем объект со стилями
+		return styles.reduce((res: Style, s:  keyof Style) => {
+			(res)[s] = ((this.$el.style)[s as keyof CSSStyleDeclaration]) as string; // формируем объект со стилями
 			return res;
 		}, {});
 	}
-
 }
 
 // оборачивает DOM элемент в объект

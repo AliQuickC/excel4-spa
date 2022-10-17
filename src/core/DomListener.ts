@@ -17,23 +17,23 @@ export abstract class DomListener {
 	protected autoAddEventListeners(): void {
 		this.listeners.forEach(listener => { // перебор массива со списком событий
 			// внутри стрелочной ф-ции, контекст this сохраняется
-			const method = getMethodName(listener); // формирование имени метода, из имени события
-			if( !(this as any)[method] ) { // проверяем, что для события с именем method в объекте,
+			const method = getMethodName(listener) as keyof this; // формирование имени метода, из имени события
+			if( !this[method] ) { // проверяем, что для события с именем method в объекте,
 				//					                 // есть метод, обработчик такого события
 				const name = this.name || ""; // имя элемента(компоненты), если было указано в конструкторе, при создании
-				throw new Error(`Method ${method} is not implemented in ${name} Component`);
+				throw new Error(`Method ${method as string} is not implemented in ${name} Component`);
 			}
-			(this as any)[method] = (this as any)[method].bind(this); // привязка контекста this к методу
-			this.$root.on(listener, (this as any)[method]); // добавляет обрвботчик this[method], для события listener,
+			(this[method] as unknown as ()=>void) = (this[method] as unknown as ()=>void).bind(this); // привязка контекста this к методу
+			this.$root.on(listener, (this)[method] as unknown as ()=>void); // добавляет обрвботчик this[method], для события listener,
 			//                                    // DOM элементу(this.$el), обернутого объектом Dom(this.$root)
 		});
 	}
 
 	protected autoRemoveEventListeners (): void {
 		this.listeners.forEach(listener => { // перебор массива со списком событий
-			const method = getMethodName(listener); // формирование имени события
+			const method = getMethodName(listener) as keyof this; // формирование имени события
 
-			this.$root.off(listener, (this as any)[method]); // удаляет обрвботчик this[method], для события listener,
+			this.$root.off(listener, this[method] as unknown as ()=>void); // удаляет обрвботчик this[method], для события listener,
 			// DOM элементу(this.$root), обернутого объектом Dom
 		});
 	}

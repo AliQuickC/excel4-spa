@@ -1,14 +1,12 @@
-// import {ExcelComponentClass} from "../../core/types";
+import {ComponentClass, Instance} from "../../core/types";
 import {ExcelComponent} from "../../core/ExcelComponent";
 import {$, Dom} from "../../core/dom";
 
 export class Excel {
-// export class Excel<AppClass extends AppComponent> {
 	private $parentEl;
-	private components;
+	private components: Array<ComponentClass> | Array<Instance> = [];
 
-	// constructor(selector: string, options: {components: Array<new (element: HTMLElement) => A> }) {
-	constructor(selector: string, options: {components: Array<any> }) { // !!!
+	constructor(selector: string, options: {components: Array<ComponentClass>}) { // !!!
 		this.$parentEl = $(selector);
 		this.components = options.components || [];
 	}
@@ -17,8 +15,8 @@ export class Excel {
 		const $root = $.create("div", "excel");
 
 		this.components = this.components.map((Component) => {
-			const $el: Dom = $.create("div", Component.className); // вынести внутрь компонента
-			const component = new Component($el);
+			const $el: Dom = $.create("div", (<ComponentClass>Component).className); // вынести внутрь компонента
+			const component: Instance = new (<ComponentClass>Component)($el);
 			$el.html(component.toHTML());
 			$root.append($el);
 			return component;
@@ -29,6 +27,6 @@ export class Excel {
 
 	public render(): void {
 		this.$parentEl.append(this.getRoot());
-		this.components.forEach(component => component.init());
+		this.components.forEach(component => (<Instance>component).init());
 	}
 }
