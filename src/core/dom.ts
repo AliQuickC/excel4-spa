@@ -41,6 +41,37 @@ export class Dom {
 		}
 		return this;
 	}
+
+	get data(): DOMStringMap { // доступ к дата атрибутам
+		return this.$el.dataset;
+	}
+
+	closest(selector: string): Dom { // возвращает родительский элемент
+		return $(<HTMLElement>(this.$el).closest(selector));
+	}
+
+	getCoords(): DOMRect { // возвращает объект с данными о местоположении элемента и т.д.
+		return this.$el.getBoundingClientRect();
+	}
+
+	findAll(selector: string): NodeList { // ищет ячейки по селектору
+		return this.$el.querySelectorAll(selector);
+	}
+
+	css(styles: {[key: string]: string}) { // преобразует стили из объекта в css свойство
+		Object
+			.keys(styles)
+			.forEach((key): void => (this.$el.style as any)[key] = (styles as any)[key]);
+	}
+
+	getStyles(styles: Array<string> = []) { // считывает css стили DOM элемента, сохраняем в объект
+		// для каждого свойства(элемента массива), считывает css значение
+		return styles.reduce((res, s) => {
+			(res as any)[s] = (this.$el.style as any)[s]; // формируем объект со стилями
+			return res;
+		}, {});
+	}
+
 }
 
 // оборачивает DOM элемент в объект
@@ -55,6 +86,6 @@ $.create = (tagName: string, classes = ""): Dom => {
 	if (classes) {
 		el.classList.add(classes);
 	}
-	// return el;
+
 	return $(el);
 };

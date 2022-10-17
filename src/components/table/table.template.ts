@@ -7,19 +7,25 @@ const CODES = {
 const DEFAULT_WIDTH = 120;
 const DEFAULT_HEIGHT = 24;
 
-function toCell() {
-	return `<div class="cell" contenteditable></div>`;
+function toCell(_: string, col:number) {
+	return `<div class="cell" contenteditable data-col="${col}"></div>`;
 }
 
-function toColumn(col: string) {
-	return `<div class="column">${col}</div>`;
+function toColumn(col: string, index: number) {
+	return `<div class="column" data-type="resizable" data-col="${index}">
+						${col}
+						<div class="col-resize" data-resize="col"></div> <!--маркер для изсменения размера столбцов-->
+					</div>`;
 }
 
 function createRow(index: number | null, content: string) {
+	const resizer = index ? "<div class=\"row-resize\" data-resize=\"row\"></div>" : "";
 	return `
-
-	<div class="row">
-		<div class="row-info">${index ? index : ""}</div>
+	<div class="row" data-type="resizable">
+		<div class="row-info">
+			${index ? index : ""}
+			${resizer} <!-- маркер для изменения размера строк-->
+		</div>
 		<div class="row-data">${content}</div>
 	</div>
 	`;
@@ -37,7 +43,6 @@ export function createTable(rowsCount = 15, state = {}): string { // вывод 
 	const cols = new Array(colsCount)
 		.fill("") // массив пустых строк, для каждой ячейки
 		.map(toChar) // преобразование кодов символов в символы, заполнение массива символами
-		// .map(widthWidthFrom(state)) // в map подставляется сформированая  ф-ция
 		// после ф-ция, формирует объект(массив объектов) с параметрами, для отрисовки колонки
 		.map(toColumn) // для каждого элемента массива(заголовка столбца) формируем верстку ячейки
 		.join("");	// склеиваем верстку всех ячеек в одну строку
