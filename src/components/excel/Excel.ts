@@ -15,7 +15,7 @@ export class Excel {
 		const $root = $.create("div", "excel");
 
 		this.components = this.components.map((Component) => {
-			const $el: Dom = $.create("div", (<ComponentClass>Component).className); // вынести внутрь компонента
+			const $el: Dom = $.create("div", (<ComponentClass>Component).className); // корневой DOM для компонента
 			const component: Instance = new (<ComponentClass>Component)($el);
 			$el.html(component.toHTML());
 			$root.append($el);

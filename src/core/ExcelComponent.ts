@@ -13,13 +13,13 @@ export abstract class ExcelComponent extends DomListener {
 	// инициализация объекта DOM
 	// добавляет слушателей
 	protected init(): void {
-		this.autoAddEventListeners(); // создание событий для DOM элемента
+		this.componentAddEventListeners(); // создание событий для DOM элемента
 	}
 
 	// удаляет слушателей
 	// удаляет коммпонент
 	protected destroy(): void {
-		this.autoRemoveEventListeners(); // удаление событий для DOM элемента
+		this.componentRemoveEventListeners(); // удаление событий для DOM элемента
 		// this.unsubscribers.forEach(unsub => unsub());
 	}
 
