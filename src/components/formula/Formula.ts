@@ -1,5 +1,6 @@
 import {ExcelComponent} from "../../core/ExcelComponent";
 import {Dom} from "../../core/dom";
+import {TableSelection} from "../table/TableSelection";
 
 export class Formula extends ExcelComponent {
 	static className = "excel__formula";
@@ -9,6 +10,9 @@ export class Formula extends ExcelComponent {
 			name: "Formula",
 			listeners: ["input", "click"]
 		});
+	}
+
+	prepare() { // запускается в конструкторе родительского класса
 	}
 
 	toHTML(): string {

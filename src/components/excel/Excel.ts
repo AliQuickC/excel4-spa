@@ -1,5 +1,4 @@
 import {ComponentClass, Instance} from "../../core/types";
-import {ExcelComponent} from "../../core/ExcelComponent";
 import {$, Dom} from "../../core/dom";
 
 export class Excel {

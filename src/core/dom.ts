@@ -1,3 +1,5 @@
+import {cellId} from "./types";
+
 interface Style {[key: string]: string}
 
 export class Dom {
@@ -56,6 +58,10 @@ export class Dom {
 		return this.$el.getBoundingClientRect();
 	}
 
+	find(selector: string): Dom {
+		return $(this.$el.querySelector(selector) as HTMLElement);
+	}
+
 	findAll(selector: string): NodeList { // ищет ячейки по селектору
 		return this.$el.querySelectorAll(selector);
 	}
@@ -64,6 +70,30 @@ export class Dom {
 		Object
 			.keys(styles)
 			.forEach((key) => (<T>(this.$el.style))[key as K] = (styles)[key] as T[K]);
+	}
+
+	id(): string;
+	id(parse: boolean): cellId;
+	id(parse?: boolean): string | cellId {
+		if (parse) { // если true, возвращаем объект с координатами ячейки
+			const parsed = (<string>this.id()).split(":"); // разбираем строку на массив
+			return { // объект с координатами ячейки
+				row: +parsed[0],
+				col: +parsed[1]
+			};
+		}
+		// data - геттер
+		return this.data.id as string; // считываем и возвращаем, дата атрибут data-id
+	}
+
+	addClass(className: string) {
+		this.$el.classList.add(className);
+		return this;
+	}
+
+	removeClass(className:string) {
+		this.$el.classList.remove(className);
+		return this;
 	}
 
 	getStyles(styles: Array<string> = []): Style { // считывает css стили DOM элемента, сохраняем в объект

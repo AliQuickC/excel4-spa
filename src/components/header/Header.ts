@@ -7,6 +7,9 @@ export class Header extends ExcelComponent {
 	// 	super($root);
 	// }
 
+	prepare() { // запускается в конструкторе родительского класса
+	}
+
 	toHTML(): string {
 		return `<input type="text" class="input" value="Новая таблица" />
 

@@ -8,7 +8,12 @@ export abstract class ExcelComponent extends DomListener {
 	constructor($root: Dom, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
 		super($root, options.listeners);
 		this.name = options.name || "";
+
+		this.prepare();
 	}
+
+	// настраивает компонент до init()
+	abstract prepare(): void;
 
 	// инициализация объекта DOM
 	// добавляет слушателей

@@ -11,6 +11,9 @@ export class Toolbar extends ExcelComponent {
 		});
 	}
 
+	prepare() { // запускается в конструкторе родительского класса
+	}
+
 	toHTML(): string {
 		return 			`<div class="button">
 		<i class="material-icons">format_align_left</i>
