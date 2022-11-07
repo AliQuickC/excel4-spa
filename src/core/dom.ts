@@ -86,6 +86,11 @@ export class Dom {
 		return this.data.id as string; // считываем и возвращаем, дата атрибут data-id
 	}
 
+	focus(): Dom { // фокус на элемент при выделении
+		this.$el.focus(); // фокус ввода на элемент
+		return this;
+	}
+
 	addClass(className: string) {
 		this.$el.classList.add(className);
 		return this;
