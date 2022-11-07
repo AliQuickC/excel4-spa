@@ -1,7 +1,7 @@
-import {Dom} from "../../core/dom";
+import {Dom} from '../../core/dom';
 
 export class TableSelection {
-	static className = "selected";
+	static className = 'selected';
 	private group: Dom[];
 	public current: Dom | null = null;
 

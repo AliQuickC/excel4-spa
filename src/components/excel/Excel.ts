@@ -1,5 +1,5 @@
-import {ComponentClass, Instance} from "../../core/types";
-import {$, Dom} from "../../core/dom";
+import {ComponentClass, Instance} from '../../core/types';
+import {$, Dom} from '../../core/dom';
 
 export class Excel {
 	private $parentEl;
@@ -11,10 +11,10 @@ export class Excel {
 	}
 
 	private getRoot(): Dom {
-		const $root = $.create("div", "excel");
+		const $root = $.create('div', 'excel');
 
 		this.components = this.components.map((Component) => {
-			const $el: Dom = $.create("div", (<ComponentClass>Component).className); // корневой DOM для компонента
+			const $el: Dom = $.create('div', (<ComponentClass>Component).className); // корневой DOM для компонента
 			const component: Instance = new (<ComponentClass>Component)($el);
 			$el.html(component.toHTML());
 			$root.append($el);

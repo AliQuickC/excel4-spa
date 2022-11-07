@@ -1,5 +1,5 @@
-import {Dom} from "./dom";
-import {capitalize} from "./utils";
+import {Dom} from './dom';
+import {capitalize} from './utils';
 
 export abstract class DomListener {
 	private listeners: Array<string>;
@@ -8,7 +8,7 @@ export abstract class DomListener {
 
 	constructor($root: Dom, listeners: Array<string> = []) {
 		if(!$root) {
-			throw new Error ("No $root provided for DomListener!");
+			throw new Error ('No $root provided for DomListener!');
 		}
 		this.$root = $root;
 		this.listeners = listeners;
@@ -20,7 +20,7 @@ export abstract class DomListener {
 			const method = getMethodName(listener) as keyof this; // формирование имени метода, из имени события
 			if( !this[method] ) { // проверяем, что для события с именем method в классе,
 				//					                 // нет метода, обработчик такого события, выводим ошибку
-				const name = this.name || ""; // имя элемента(компоненты), если было указано в конструкторе, при создании
+				const name = this.name || ''; // имя элемента(компоненты), если было указано в конструкторе, при создании
 				throw new Error(`Method ${method as string} is not implemented in ${name} Component`);
 			}
 			(this[method] as unknown as ()=>void) = (this[method] as unknown as ()=>void).bind(this); // привязка контекста this к методу
@@ -41,5 +41,5 @@ export abstract class DomListener {
 
 // формирует имя события
 function getMethodName(eventName: string): string {
-	return "on" + capitalize(eventName);
+	return 'on' + capitalize(eventName);
 }

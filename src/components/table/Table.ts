@@ -1,20 +1,20 @@
-import {ExcelComponent} from "../../core/ExcelComponent";
-import {createTable} from "./table.template";
-import {$, Dom} from "../../core/dom";
-import {resizeHandler} from "./table.resize";
-import {isCell, matrix, shouldResize} from "./table.functions";
-import {TableSelection} from "./TableSelection";
+import {ExcelComponent} from '../../core/ExcelComponent';
+import {createTable} from './table.template';
+import {$, Dom} from '../../core/dom';
+import {resizeHandler} from './table.resize';
+import {isCell, matrix, shouldResize} from './table.functions';
+import {TableSelection} from './TableSelection';
 
 export class Table extends ExcelComponent {
-	static className = "excel__table";
+	static className = 'excel__table';
 	// private selection: InstanceType<typeof TableSelection> | undefined;
 	private selection: TableSelection | undefined;
 
 	constructor($root: Dom) {
 		super($root, {
-			name: "Table",
-			listeners: ["mousedown"]
-			// listeners: ["mousedown", "mousemove", "mouseup"]
+			name: 'Table',
+			listeners: ['mousedown']
+			// listeners: ['mousedown', 'mousemove', 'mouseup']
 		});
 	}
 
@@ -28,7 +28,7 @@ export class Table extends ExcelComponent {
 
 	init() {
 		super.init();
-		const $cell = this.$root.find("[data-id=\"0:0\"]");
+		const $cell = this.$root.find('[data-id="0:0"]');
 		(<TableSelection>this.selection).select($cell);
 	}
 
@@ -50,10 +50,10 @@ export class Table extends ExcelComponent {
 	}
 
 	onMousemove(event: Event): void {
-		console.log("mousemove");
+		console.log('mousemove');
 	}
 
 	onMouseup(event: Event): void {
-		console.log("mouseup");
+		console.log('mouseup');
 	}
 }

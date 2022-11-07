@@ -1,13 +1,13 @@
-import {Dom} from "../../core/dom";
-import {cellId} from "../../core/types";
-import {range} from "../../core/utils";
+import {Dom} from '../../core/dom';
+import {cellId} from '../../core/types';
+import {range} from '../../core/utils';
 
 export function shouldResize(event: Event) {
 	return (<HTMLElement>event.target).dataset.resize; // дата атрибут data-resize
 }
 
 export function isCell(event: Event): boolean {
-	return (<HTMLElement>event.target).dataset.type === "cell";
+	return (<HTMLElement>event.target).dataset.type === 'cell';
 }
 
 export function matrix($target: Dom, $current: Dom): string[] {

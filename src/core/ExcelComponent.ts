@@ -1,13 +1,13 @@
-import {DomListener} from "./DomListener";
-import {Dom} from "./dom";
-import {ExcelComponentOptions} from "./types";
+import {DomListener} from './DomListener';
+import {Dom} from './dom';
+import {ExcelComponentOptions} from './types';
 
 export abstract class ExcelComponent extends DomListener {
 	public name: string;
 
 	constructor($root: Dom, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
 		super($root, options.listeners);
-		this.name = options.name || "";
+		this.name = options.name || '';
 
 		this.prepare();
 	}

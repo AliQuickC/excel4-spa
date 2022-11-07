@@ -1,4 +1,4 @@
-import {Dom} from "./dom";
+import {Dom} from './dom';
 
 export type ExcelComponentOptions = {name: string, listeners: Array<string>};
 
@@ -15,4 +15,4 @@ export type Instance = InstanceType<ComponentClass> & InstanceAddProp; // Instan
 export interface cellId {
 	row: number,
 	col: number
-};
+}

@@ -1,18 +1,18 @@
-import {cellId} from "./types";
+import {cellId} from './types';
 
 interface Style {[key: string]: string}
 
 export class Dom {
 	$el: HTMLElement;
 	constructor(selector: string | HTMLElement) {
-		this.$el = typeof selector === "string"
+		this.$el = typeof selector === 'string'
 			? document.querySelector(selector) as HTMLElement
 			:	selector;
 	}
 
 	// вставляет html в корень DOM элемента, который обернут объектом класса Dom
 	html(html: string): Dom | string {
-		if (typeof html === "string") {
+		if (typeof html === 'string') {
 			this.$el.innerHTML = html;
 			return this;
 		}
@@ -21,7 +21,7 @@ export class Dom {
 
 	// очищает содержимое DOM элемента
 	clear(): Dom {
-		this.html("");
+		this.html('');
 		return this;
 	}
 
@@ -76,7 +76,7 @@ export class Dom {
 	id(parse: boolean): cellId;
 	id(parse?: boolean): string | cellId {
 		if (parse) { // если true, возвращаем объект с координатами ячейки
-			const parsed = (<string>this.id()).split(":"); // разбираем строку на массив
+			const parsed = (<string>this.id()).split(':'); // разбираем строку на массив
 			return { // объект с координатами ячейки
 				row: +parsed[0],
 				col: +parsed[1]
@@ -112,7 +112,7 @@ export function $(selector: string | HTMLElement): Dom {
 
 // создает DOM элемент с тегом tagName и классами classes,
 // затем оборачивает DOM элемент в объект
-$.create = (tagName: string, classes = ""): Dom => {
+$.create = (tagName: string, classes = ''): Dom => {
 	const el = document.createElement(tagName);
 	if (classes) {
 		el.classList.add(classes);
