@@ -1,16 +1,22 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
+import {ExcelComponentOptions} from '../../core/types';
+import {Dom} from '../../core/dom';
 
 export class Header extends ExcelComponent {
 	static className = 'excel__header';
 
-	// constructor($root: HTMLElement) {
-	// 	super($root);
-	// }
-
-	prepare() { // запускается в конструкторе родительского класса
+	constructor($root: Dom, options: ExcelComponentOptions) {
+		super($root, {
+			name: 'Header',
+			// listeners: [],
+			...options
+		});
 	}
 
-	toHTML(): string {
+	public prepare() { // запускается в конструкторе родительского класса
+	}
+
+	public toHTML(): string {
 		return `<input type="text" class="input" value="Новая таблица" />
 
 		<div>

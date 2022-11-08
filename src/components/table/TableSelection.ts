@@ -3,7 +3,7 @@ import {Dom} from '../../core/dom';
 export class TableSelection {
 	static className = 'selected';
 	private group: Dom[];
-	public current: Dom | null = null;
+	public current!: Dom;
 
 	constructor() {
 		this.group = [] as Dom[];

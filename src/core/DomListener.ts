@@ -3,7 +3,7 @@ import {capitalize} from './utils';
 
 export abstract class DomListener {
 	private listeners: Array<string>;
-	public $root;
+	public $root: Dom;
 	abstract name: string;
 
 	constructor($root: Dom, listeners: Array<string> = []) {
@@ -14,7 +14,7 @@ export abstract class DomListener {
 		this.listeners = listeners;
 	}
 
-	protected componentAddEventListeners(): void {
+	protected onComponentEvents(): void {
 		this.listeners.forEach(listener => { // перебор массива со списком событий
 			// внутри стрелочной ф-ции, контекст this сохраняется
 			const method = getMethodName(listener) as keyof this; // формирование имени метода, из имени события
@@ -29,7 +29,7 @@ export abstract class DomListener {
 		});
 	}
 
-	protected componentRemoveEventListeners (): void {
+	protected offComponentEvents(): void {
 		this.listeners.forEach(listener => { // перебор массива со списком событий
 			const method = getMethodName(listener) as keyof this; // формирование имени события
 
