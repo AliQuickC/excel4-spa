@@ -1,4 +1,4 @@
-import {Dom} from '../../core/dom';
+import {DomInstance} from '../../core/dom';
 import {cellId} from '../../core/types';
 import {range} from '../../core/utils';
 
@@ -10,7 +10,7 @@ export function isCell(event: Event): boolean {
 	return (<HTMLElement>event.target).dataset.type === 'cell';
 }
 
-export function matrix($target: Dom, $current: Dom): string[] {
+export function matrix($target: DomInstance, $current: DomInstance): string[] {
 	const target = $target.id(true) as cellId; // объект с координатами ячейки, выбранной нажатием
 	const current = $current.id(true) as cellId; // объект с координатами ячейки, которая уже была выбрана
 

@@ -1,11 +1,11 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
 import {ExcelComponentOptions} from '../../core/types';
-import {Dom} from '../../core/dom';
+import {DomInstance} from '../../core/dom';
 
 export class Header extends ExcelComponent {
 	static className = 'excel__header';
 
-	constructor($root: Dom, options: ExcelComponentOptions) {
+	constructor($root: DomInstance, options: ExcelComponentOptions) {
 		super($root, {
 			name: 'Header',
 			// listeners: [],

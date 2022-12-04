@@ -1,5 +1,5 @@
 import {DomListener} from './DomListener';
-import {Dom} from './dom';
+import {DomInstance} from './dom';
 import {ExcelComponentOptions} from './types';
 import {Emitter} from './Emitter';
 
@@ -8,7 +8,7 @@ export abstract class ExcelComponent extends DomListener {
 	protected emitter: Emitter;
 	private unsubscribers: Array<()=>void>;
 
-	protected constructor($root: Dom, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
+	protected constructor($root: DomInstance, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
 		super($root, options.listeners);
 		this.name = options.name || '';
 		this.emitter = options.emitter;

@@ -1,12 +1,12 @@
-import {Dom} from './dom';
+import {DomInstance} from './dom';
 import {capitalize} from './utils';
 
 export abstract class DomListener {
 	private listeners: Array<string>;
-	public $root: Dom;
+	public $root: DomInstance;
 	abstract name: string;
 
-	constructor($root: Dom, listeners: Array<string> = []) {
+	constructor($root: DomInstance, listeners: Array<string> = []) {
 		if(!$root) {
 			throw new Error ('No $root provided for DomListener!');
 		}

@@ -1,6 +1,6 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
 import {createTable} from './table.template';
-import {$, Dom} from '../../core/dom';
+import {$, DomInstance} from '../../core/dom';
 import {resizeHandler} from './table.resize';
 import {isCell, matrix, nextSelector, shouldResize} from './table.functions';
 import {TableSelection} from './TableSelection';
@@ -11,7 +11,7 @@ export class Table extends ExcelComponent {
 	// private selection: InstanceType<typeof TableSelection> | undefined;
 	private selection!: TableSelection;
 
-	constructor($root: Dom, options: ExcelComponentOptions) {
+	constructor($root: DomInstance, options: ExcelComponentOptions) {
 		super($root, {
 			name: 'Table',
 			listeners: ['mousedown', 'keydown', 'input'],
@@ -33,18 +33,18 @@ export class Table extends ExcelComponent {
 		// ищет ячейку в DOM элементе excel__table, this.$root - объект класса Dom
 		this.selectCell(this.$root.find('[data-id="0:0"]')); // делаем DOM ячейку выбранной, при открытии документа
 
-		this.$on('formula:input', (text: string) => {
+		this.$on('formula:input', (text: string): void => {
 			// console.log('text', text);
 			this.selection.current.text(text);
 		});
 
-		this.$on('formula:done', () => { // добавить обработчик события, если в формуле Enter или Tab
+		this.$on('formula:done', (): void => { // добавить обработчик события, если в формуле Enter или Tab
 			this.selection.current.focus();	//				// смена фокуса из формулы на активную ячейку,
 		});
 	}
 
 	// выбор ячейки DOM
-	private selectCell($cell:Dom) {
+	private selectCell($cell:DomInstance): void {
 		(this.selection).select($cell); // делаем ячейку выбранной, $cell - объект класса Dom
 
 		this.$emit('table:select', $cell); // вызов события, выбор ячейки, при выборе ячейки в таблице,
@@ -64,16 +64,17 @@ export class Table extends ExcelComponent {
 		if (shouldResize(event)) { // если событие произошло на маркере ресайза, и у элемента есть дата атрибут data-resize
 			resizeHandler(this.$root, event); // обработка ресайза таблици
 		} else if (isCell(event)) { // если событие произошло на ячейке
-			const $target: Dom = $(<HTMLElement>event.target);
+			const $target: DomInstance = $(<HTMLElement>event.target);
 
 			if (event.shiftKey) { // событие на ячейке, с зажатым shift, групповое выделение ячеек
-				const $cells = matrix($target, (this.selection.current) as Dom) // массив строк, список всех выбранных ячеек
+				const $cells = matrix($target, (this.selection.current) as DomInstance) // массив строк, список всех выбранных ячеек
 					.map(id => this.$root.find(`[data-id="${id}"]`)); // массив элементов(ячеек) со страници,
 					//																								// которые были выделены
 				this.selection.selectGroup($cells); // выделение гуппы ячеек
 			} else {
-				this.selection.select($target);
-				this.$emit('table:input', $(<HTMLElement>event.target));
+				// this.selection.select($target);
+				// this.$emit('table:input', $(<HTMLElement>event.target));
+				this.selectCell($target);
 			}
 		}
 	}
@@ -81,12 +82,13 @@ export class Table extends ExcelComponent {
 	protected onKeydown(event: KeyboardEvent) { // нажата одна из кнопок навигации по ячейкам таблици
 		const keys = ['Enter', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
+
 		const {key} = event; // кнопка по которой сработало событие
 
 		if (keys.includes(key) && !event.shiftKey) { // если нажата кнопка, и при этом не была зажата shift
 			event.preventDefault();
 
-			const id = (this.selection.current as Dom).id(true); // текущая ячейка (объект с координатами ячейки)
+			const id = (this.selection.current as DomInstance).id(true); // текущая ячейка (объект с координатами ячейки)
 			const $next = this.$root.find(nextSelector(key, id)); // определяем ячейку, куда надо перейти
 
 			this.selectCell($next);	// устанавливаем ячейку как выбранную

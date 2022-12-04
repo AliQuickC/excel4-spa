@@ -1,15 +1,15 @@
-import {Dom} from '../../core/dom';
+import {DomInstance} from '../../core/dom';
 
 export class TableSelection {
 	static className = 'selected';
-	private group: Dom[];
-	public current!: Dom;
+	private group: DomInstance[];
+	public current!: DomInstance;
 
 	constructor() {
-		this.group = [] as Dom[];
+		this.group = [] as DomInstance[];
 	}
 
-	select($el: Dom): void {
+	select($el: DomInstance): void {
 		this.clear();
 		$el.focus().addClass(TableSelection.className);
 		this.group.push($el);
@@ -21,7 +21,7 @@ export class TableSelection {
 		this.group = [];
 	}
 
-	selectGroup($group: Dom[] = []): void { // выделить группу ячеек
+	selectGroup($group: DomInstance[] = []): void { // выделить группу ячеек
 		this.clear();
 
 		this.group = $group;

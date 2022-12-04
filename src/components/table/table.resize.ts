@@ -1,6 +1,6 @@
-import {$, Dom} from '../../core/dom';
+import {$, DomInstance} from '../../core/dom';
 
-export function resizeHandler($root: Dom, event: Event) { // обработка ресайза, после события onMousedown
+export function resizeHandler($root: DomInstance, event: Event) { // обработка ресайза, после события onMousedown
 	const $resizer = $(event.target as HTMLElement); // элемент(маркер), на котором произошло событие
 	const $parent = $resizer.closest('[data-type="resizable"]'); // получаем родительский элемент
 	const coords = $parent.getCoords(); // получаем объект с данными, о текущем местоположении элемента(столбца/строки),

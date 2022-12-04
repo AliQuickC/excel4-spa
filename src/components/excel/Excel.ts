@@ -1,5 +1,5 @@
 import {ComponentClass, Instance} from '../../core/types';
-import {$, Dom} from '../../core/dom';
+import {$, DomInstance} from '../../core/dom';
 import {Emitter} from '../../core/Emitter';
 
 export class Excel {
@@ -13,12 +13,12 @@ export class Excel {
 		this.emitter = new Emitter();
 	}
 
-	private getRoot(): Dom {
+	private getRoot(): DomInstance {
 		const $root = $.create('div', 'excel');
 		const componentOptions = {emitter: this.emitter};
 
 		this.components = this.components.map((Component) => {
-			const $el: Dom = $.create('div', (<ComponentClass>Component).className); // корневой DOM для компонента
+			const $el: DomInstance = $.create('div', (<ComponentClass>Component).className); // корневой DOM для компонента
 			const component: Instance = new (<ComponentClass>Component)($el, componentOptions);
 			$el.html(component.toHTML());
 			$root.append($el);

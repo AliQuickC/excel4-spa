@@ -1,12 +1,12 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
-import {$, Dom} from '../../core/dom';
+import {$, DomInstance} from '../../core/dom';
 import {ExcelComponentOptions} from '../../core/types';
 
 export class Formula extends ExcelComponent {
 	static className = 'excel__formula';
-	private $formula!: Dom;
+	private $formula!: DomInstance;
 
-	constructor($root: Dom, options: ExcelComponentOptions) {
+	constructor($root: DomInstance, options: ExcelComponentOptions) {
 		super($root, {
 			name: 'Formula',
 			listeners: ['input', 'keydown'],
@@ -19,14 +19,14 @@ export class Formula extends ExcelComponent {
 
 		this.$formula = this.$root.find('#formula');
 
-		this.$on('table:select', $cell => { // добавить обработчик события
+		this.$on('table:select', ($cell: DomInstance): void => { // добавить обработчик события
 			//               // при выборе ячейки в таблице, показываем в формуле данные,
 			this.$formula.text($cell.text()); //  из дата атрибута ячейки
 			// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
 		});
 
-		this.$on('table:input', $cell => { // добавить обработчик события
-			//               // при выборе ячейки в таблице, показываем в формуле данные,
+		this.$on('table:input', ($cell: DomInstance): void => { // добавить обработчик события
+			//               // при вводе в ячейку таблицы, показываем в формуле данные,
 			this.$formula.text($cell.text()); //  из дата атрибута ячейки
 			// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
 		});

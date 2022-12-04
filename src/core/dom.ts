@@ -1,8 +1,9 @@
 import {cellId} from './types';
 
 interface Style {[key: string]: string}
+export type DomInstance = InstanceType<typeof Dom>;
 
-export class Dom {
+class Dom {
 	private $el: HTMLElement;
 
 	constructor(selector: string | HTMLElement) {
@@ -12,7 +13,7 @@ export class Dom {
 	}
 
 	// вставляет html в корень DOM элемента, который обернут объектом класса Dom
-	public html(html: string): Dom | string {
+	public html(html: string): DomInstance | string {
 		if (typeof html === 'string') {
 			this.$el.innerHTML = html;
 			return this;
@@ -21,8 +22,8 @@ export class Dom {
 	}
 
 	public text(): string;
-	public text(text: string): Dom;
-	public text(text?: string | undefined): Dom | string { // заполняет содержимое элемента текстом
+	public text(text: string): DomInstance;
+	public text(text?: string | undefined): DomInstance | string { // заполняет содержимое элемента текстом
 		if (typeof text !== 'undefined') { // если в элемент введен текст
 			this.$el.textContent = text; //  меняем свойство textContent (текстовое содержимое элемента)
 			return this;
@@ -34,7 +35,7 @@ export class Dom {
 	}
 
 	// очищает содержимое DOM элемента
-	public clear(): Dom {
+	public clear(): DomInstance {
 		this.html('');
 		return this;
 	}
@@ -43,11 +44,11 @@ export class Dom {
 		this.$el.addEventListener(eventType, callback);
 	}
 
-	public off(eventType: string, callback: (event: Event)=>void) { // удаляет обрвботчик callback, для события eventType, DOM элемента, внутри объекта Dom
+	public off(eventType: string, callback: (event: Event)=>void): void { // удаляет обрвботчик callback, для события eventType, DOM элемента, внутри объекта Dom
 		this.$el.removeEventListener(eventType, callback);
 	}
 
-	public append(node: HTMLElement | Dom): Dom {
+	public append(node: HTMLElement | DomInstance): DomInstance {
 		if (node instanceof Dom) { // если node является инстанцом класса Dom,
 			node = node.$el; // node присваиваем Dom элемент,
 		} // иначе предполагается что node это нативный элемент
@@ -64,7 +65,7 @@ export class Dom {
 		return this.$el.dataset;
 	}
 
-	public closest(selector: string): Dom { // возвращает родительский элемент
+	public closest(selector: string): DomInstance { // возвращает родительский элемент
 		return $(<HTMLElement>(this.$el).closest(selector));
 	}
 
@@ -72,7 +73,7 @@ export class Dom {
 		return this.$el.getBoundingClientRect();
 	}
 
-	public find(selector: string): Dom {
+	public find(selector: string): DomInstance {
 		return $(this.$el.querySelector(selector) as HTMLElement);
 	}
 
@@ -80,10 +81,10 @@ export class Dom {
 		return this.$el.querySelectorAll(selector);
 	}
 
-	public css<T extends CSSStyleDeclaration, K extends keyof T>(styles: {[key: string]: string}): void { // преобразует стили из объекта в css свойство
+	public css<T extends CSSStyleDeclaration>(styles: {[key: string]: string}): void { // преобразует стили из объекта в css свойство
 		Object
 			.keys(styles)
-			.forEach((key) => (<T>(this.$el.style))[key as K] = (styles)[key] as T[K]);
+			.forEach((key) => (<T>(this.$el.style))[key as keyof T] = (styles)[key] as T[keyof T]);
 	}
 
 	public id(): string;
@@ -100,17 +101,17 @@ export class Dom {
 		return this.data.id as string; // считываем и возвращаем, дата атрибут data-id
 	}
 
-	public focus(): Dom { // фокус на элемент при выделении
+	public focus(): DomInstance { // фокус на элемент при выделении
 		this.$el.focus(); // фокус ввода на элемент
 		return this;
 	}
 
-	public addClass(className: string) {
+	public addClass(className: string): DomInstance {
 		this.$el.classList.add(className);
 		return this;
 	}
 
-	public removeClass(className:string) {
+	public removeClass(className:string): DomInstance {
 		this.$el.classList.remove(className);
 		return this;
 	}
@@ -125,13 +126,13 @@ export class Dom {
 }
 
 // оборачивает DOM элемент в объект
-export function $(selector: string | HTMLElement): Dom {
+export function $(selector: string | HTMLElement): DomInstance {
 	return new Dom(selector);
 }
 
 // создает DOM элемент с тегом tagName и классами classes,
 // затем оборачивает DOM элемент в объект
-$.create = (tagName: string, classes = ''): Dom => {
+$.create = (tagName: string, classes = ''): DomInstance => {
 	const el = document.createElement(tagName);
 	if (classes) {
 		el.classList.add(classes);
