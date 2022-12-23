@@ -100,7 +100,7 @@ export class Table extends ExcelComponent {
 		this.$emit('table:input', $(<HTMLElement>event.target));
 	}
 
-	onMouseup(event: Event): void {
+	onMouseup(): void {
 		console.log('mouseup');
 	}
 }

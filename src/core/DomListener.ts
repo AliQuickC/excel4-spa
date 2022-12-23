@@ -17,7 +17,7 @@ export abstract class DomListener {
 	protected onComponentEvents(): void {
 		this.listeners.forEach(listener => { // перебор массива со списком событий
 			// внутри стрелочной ф-ции, контекст this сохраняется
-			const method = getMethodName(listener) as keyof this; // формирование имени метода, из имени события
+			const method: keyof this = getMethodName(listener) as keyof this; // формирование имени метода, из имени события
 			if( !this[method] ) { // проверяем, что для события с именем method в классе,
 				//					                 // нет метода, обработчик такого события, выводим ошибку
 				const name = this.name || ''; // имя элемента(компоненты), если было указано в конструкторе, при создании
@@ -31,7 +31,7 @@ export abstract class DomListener {
 
 	protected offComponentEvents(): void {
 		this.listeners.forEach(listener => { // перебор массива со списком событий
-			const method = getMethodName(listener) as keyof this; // формирование имени события
+			const method: keyof this = getMethodName(listener) as keyof this; // формирование имени события
 
 			this.$root.off(listener, this[method] as unknown as ()=>void); // удаляет обрвботчик this[method], для события listener,
 			// DOM элементу(this.$root), обернутого объектом Dom
