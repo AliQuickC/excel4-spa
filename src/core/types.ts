@@ -19,3 +19,25 @@ export interface cellId {
 	row: number,
 	col: number
 }
+
+export type Events = 'table:select' | 'table:input' | 'formula:input' | 'formula:done';
+export type EventHandler = ((text: string) => void) | (() => void) | (($cell: DomInstance) => void);
+
+// type EventZeroParams = 'formula:done';
+// type EventOneParams = 'table:select' | 'table:input' | 'formula:input';
+
+// type SubscriberParams = DomInstance | string;
+// export type VoidSubscriber = () => void;
+// export type EventSubscriber = (param: SubscriberParams) => void;
+
+// export type Handlers = {
+// 	($cell: DomInstance): void;
+// 	($cell: DomInstance): void;
+// 	(text: string): void;
+// 	(): void;
+// };
+
+// export type AddEvent = {
+// 	(eventName: EventZeroParams, fn: VoidSubscriber): (eventName: Events, fn: VoidSubscriber)=>boolean;
+// 	(eventName: EventOneParams, fn: EventSubscriber): (eventName: Events, fn: EventSubscriber)=>boolean;
+// }

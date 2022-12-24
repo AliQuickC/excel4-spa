@@ -1,5 +1,8 @@
+import { EventHandler, Events } from './types';
+
 export class Emitter {
 	private listeners: { [key: string]: Array<(...args: Array<any>)=>void> };
+	// private readonly listeners: Record<Events, EventHandler[]> = {} as Record<Events, EventHandler[]>;
 
 	constructor() {
 		this.listeners = {};
@@ -7,7 +10,7 @@ export class Emitter {
 
 	// dispatch, fire, trigger
 	// уведомляет слушателей если они есть
-	emit(eventName: string, ...args: Array<any>) { // все args собираются в массив
+	public emit = (eventName: Events, ...args: Array<any>): boolean => { // все args собираются в массив
 		if (!Array.isArray(this.listeners[eventName])) {
 			return false;
 		}
@@ -15,22 +18,20 @@ export class Emitter {
 			listener(...args); // args разворачиваются из массива
 		});
 		return true;
-	}
+	};
 
 	// on, listener
 	// подписываемся на уведомление
 	// Добавляем нового слушателя
-	addEventListener(eventName: string, fn: (args: any) => void ) {
+	public addEventListener = (eventName: Events, fn: EventHandler) => {
 		this.listeners[eventName] = this.listeners[eventName] || [];
 		this.listeners[eventName].push(fn);
 		return () => { // ф-ция удаляет обработчик события remove EventListener
 			this.removeEventListener(eventName, fn);
-			// this.listeners[eventName] =
-			// 	this.listeners[eventName].filter(listener => listener !== fn);
 		};
-	}
+	};
 
-	removeEventListener(eventName: string, fn: (args: any)=>void) {
+	removeEventListener(eventName: Events, fn: EventHandler) {
 		this.listeners[eventName] =
 			this.listeners[eventName].filter(listener => listener !== fn);
 	}

@@ -1,6 +1,6 @@
 import {DomListener} from './DomListener';
 import {DomInstance} from './dom';
-import {ExcelComponentOptions} from './types';
+import {EventHandler, Events, ExcelComponentOptions} from './types';
 import {Emitter} from './Emitter';
 
 export abstract class ExcelComponent extends DomListener {
@@ -24,12 +24,14 @@ export abstract class ExcelComponent extends DomListener {
 	abstract prepare(): void;
 
 	// вызов события
-	protected $emit(event: string, ...args: any[]) {
+	// protected $emit(event: Events): void
+	protected $emit(event: Events, ...args: Array<any>): void {
 		this.emitter.emit(event, ...args);
 	}
 
 	// добавить обработчик события event (подписка)
-	protected $on(event: string, fn: (args: any) =>void) {
+	// protected $on(event: string, fn: (args: any) =>void) {
+	protected $on(event: Events, fn: 	EventHandler) {
 		const unsub = this.emitter.addEventListener(event, fn);
 		this.unsubscribers.push(unsub);
 	}
