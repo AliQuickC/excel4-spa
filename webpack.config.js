@@ -60,7 +60,7 @@ module.exports = {
 		new MiniCssExtractPlugin({ // выносит css из js в отдельный файл
 			filename: filename('css') // имя css файла, куда будут собираться все стили
 		}),
-		new ESLintPlugin({}),
+		new ESLintPlugin({ extensions: 'ts' }),
 	],
 
 	module: {
@@ -91,4 +91,4 @@ module.exports = {
 	},
 
 	...devServer(isDev)
-}
+};

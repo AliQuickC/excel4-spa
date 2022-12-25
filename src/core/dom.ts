@@ -1,35 +1,54 @@
-export class Dom {
-	$el: HTMLElement;
+import {cellId} from './types';
+
+interface Style {[key: string]: string}
+export type DomInstance = InstanceType<typeof Dom>;
+
+class Dom {
+	private $el: HTMLElement;
+
 	constructor(selector: string | HTMLElement) {
-		this.$el = typeof selector === "string"
+		this.$el = typeof selector === 'string'
 			? document.querySelector(selector) as HTMLElement
 			:	selector;
 	}
 
 	// вставляет html в корень DOM элемента, который обернут объектом класса Dom
-	html(html: string): Dom | string {
-		if (typeof html === "string") {
+	public html(html: string): DomInstance | string {
+		if (typeof html === 'string') {
 			this.$el.innerHTML = html;
 			return this;
 		}
 		return this.$el.outerHTML.trim();
 	}
 
+	public text(): string;
+	public text(text: string): DomInstance;
+	public text(text?: string | undefined): DomInstance | string { // заполняет содержимое элемента текстом
+		if (typeof text !== 'undefined') { // если в элемент введен текст
+			this.$el.textContent = text; //  меняем свойство textContent (текстовое содержимое элемента)
+			return this;
+		}
+		if (this.$el.tagName.toLowerCase() === 'input') { // если элемент типа input
+			return (<HTMLInputElement>this.$el).value.trim(); //                // меняем свойство value
+		}
+		return (this.$el.textContent as keyof Node).trim();
+	}
+
 	// очищает содержимое DOM элемента
-	clear(): Dom {
-		this.html("");
+	public clear(): DomInstance {
+		this.html('');
 		return this;
 	}
 
-	on(eventType: string, callback: (event: Event)=>void): void { // добавляет обрвботчик callback, для события eventType, DOM элементу, внутри объекта Dom
+	public on(eventType: string, callback: (event: Event)=>void): void { // добавляет обрвботчик callback, для события eventType, DOM элементу, внутри объекта Dom
 		this.$el.addEventListener(eventType, callback);
 	}
 
-	off(eventType: string, callback: (event: Event)=>void) { // удаляет обрвботчик callback, для события eventType, DOM элемента, внутри объекта Dom
+	public off(eventType: string, callback: (event: Event)=>void): void { // удаляет обрвботчик callback, для события eventType, DOM элемента, внутри объекта Dom
 		this.$el.removeEventListener(eventType, callback);
 	}
 
-	append(node: HTMLElement | Dom): Dom {
+	public append(node: HTMLElement | DomInstance): DomInstance {
 		if (node instanceof Dom) { // если node является инстанцом класса Dom,
 			node = node.$el; // node присваиваем Dom элемент,
 		} // иначе предполагается что node это нативный элемент
@@ -42,46 +61,78 @@ export class Dom {
 		return this;
 	}
 
-	get data(): DOMStringMap { // доступ к дата атрибутам
+	public get data(): DOMStringMap { // доступ к дата атрибутам
 		return this.$el.dataset;
 	}
 
-	closest(selector: string): Dom { // возвращает родительский элемент
+	public closest(selector: string): DomInstance { // возвращает родительский элемент
 		return $(<HTMLElement>(this.$el).closest(selector));
 	}
 
-	getCoords(): DOMRect { // возвращает объект с данными о местоположении элемента и т.д.
+	public getCoords(): DOMRect { // возвращает объект с данными о местоположении элемента и т.д.
 		return this.$el.getBoundingClientRect();
 	}
 
-	findAll(selector: string): NodeList { // ищет ячейки по селектору
+	public find(selector: string): DomInstance {
+		return $(this.$el.querySelector(selector) as HTMLElement);
+	}
+
+	public findAll(selector: string): NodeList { // ищет ячейки по селектору
 		return this.$el.querySelectorAll(selector);
 	}
 
-	css(styles: {[key: string]: string}) { // преобразует стили из объекта в css свойство
+	public css<T extends CSSStyleDeclaration>(styles: {[key: string]: string}): void { // преобразует стили из объекта в css свойство
 		Object
 			.keys(styles)
-			.forEach((key): void => (this.$el.style as any)[key] = (styles as any)[key]);
+			.forEach((key) => (<T>(this.$el.style))[key as keyof T] = (styles)[key] as T[keyof T]);
 	}
 
-	getStyles(styles: Array<string> = []) { // считывает css стили DOM элемента, сохраняем в объект
+	public id(): string;
+	public id(parse: unknown): cellId;
+	public id(parse?: unknown): string | cellId {
+		if (parse) { // если true, возвращаем объект с координатами ячейки
+			const parsed = (<string>this.id()).split(':'); // разбираем строку на массив
+			return { // объект с координатами ячейки
+				row: +parsed[0],
+				col: +parsed[1]
+			};
+		}
+		// data - геттер
+		return this.data.id as string; // считываем и возвращаем, дата атрибут data-id
+	}
+
+	public focus(): DomInstance { // фокус на элемент при выделении
+		this.$el.focus(); // фокус ввода на элемент
+		return this;
+	}
+
+	public addClass(className: string): DomInstance {
+		this.$el.classList.add(className);
+		return this;
+	}
+
+	public removeClass(className:string): DomInstance {
+		this.$el.classList.remove(className);
+		return this;
+	}
+
+	public getStyles(styles: Array<string> = []): Style { // считывает css стили DOM элемента, сохраняем в объект
 		// для каждого свойства(элемента массива), считывает css значение
-		return styles.reduce((res, s) => {
-			(res as any)[s] = (this.$el.style as any)[s]; // формируем объект со стилями
+		return styles.reduce((res: Style, s:  keyof Style) => {
+			(res)[s] = ((this.$el.style)[s as keyof CSSStyleDeclaration]) as string; // формируем объект со стилями
 			return res;
 		}, {});
 	}
-
 }
 
 // оборачивает DOM элемент в объект
-export function $(selector: string | HTMLElement): Dom {
+export function $(selector: string | HTMLElement): DomInstance {
 	return new Dom(selector);
 }
 
 // создает DOM элемент с тегом tagName и классами classes,
 // затем оборачивает DOM элемент в объект
-$.create = (tagName: string, classes = ""): Dom => {
+$.create = (tagName: string, classes = ''): DomInstance => {
 	const el = document.createElement(tagName);
 	if (classes) {
 		el.classList.add(classes);

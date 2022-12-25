@@ -1,28 +1,51 @@
-import {DomListener} from "./DomListener";
-import {Dom} from "./dom";
-import {ExcelComponentOptions} from "./types";
+import {DomListener} from './DomListener';
+import {DomInstance} from './dom';
+import {EventHandler, Events, ExcelComponentOptions} from './types';
+import {Emitter} from './Emitter';
 
 export abstract class ExcelComponent extends DomListener {
-	public name: string;
+	public readonly name: string;
+	protected emitter: Emitter;
+	private unsubscribers: Array<()=>void>;
 
-	constructor($root: Dom, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
+	protected constructor($root: DomInstance, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
 		super($root, options.listeners);
-		this.name = options.name || "";
+		this.name = options.name || '';
+		this.emitter = options.emitter;
+		this.unsubscribers = [];
+
+		this.prepare();
+	}
+
+	// абстрактный метод, переопределяется в наследуемом классе(DOM элементе)
+	abstract toHTML(): string;
+
+	// настраивает компонент до init()
+	abstract prepare(): void;
+
+	// вызов события
+	// protected $emit(event: Events): void
+	protected $emit(event: Events, ...args: Array<any>): void {
+		this.emitter.emit(event, ...args);
+	}
+
+	// добавить обработчик события event (подписка)
+	// protected $on(event: string, fn: (args: any) =>void) {
+	protected $on(event: Events, fn: 	EventHandler) {
+		const unsub = this.emitter.addEventListener(event, fn);
+		this.unsubscribers.push(unsub);
 	}
 
 	// инициализация объекта DOM
 	// добавляет слушателей
 	protected init(): void {
-		this.autoAddEventListeners(); // создание событий для DOM элемента
+		this.onComponentEvents(); // создание событий для DOM элемента
 	}
 
 	// удаляет слушателей
 	// удаляет коммпонент
-	protected destroy(): void {
-		this.autoRemoveEventListeners(); // удаление событий для DOM элемента
-		// this.unsubscribers.forEach(unsub => unsub());
+	public destroy(): void {
+		this.offComponentEvents(); // удаление событий для DOM элемента
+		this.unsubscribers.forEach(unsub => unsub()); // удаление подписок на события
 	}
-
-	// абстрактный метод, переопределяется в наследуемом классе(DOM элементе)
-	abstract toHTML(): string;
 }

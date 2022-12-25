@@ -1,24 +1,25 @@
-// import {ExcelComponentClass} from "../../core/types";
-import {ExcelComponent} from "../../core/ExcelComponent";
-import {$, Dom} from "../../core/dom";
+import {ComponentClass, Instance} from '../../core/types';
+import {$, DomInstance} from '../../core/dom';
+import {Emitter} from '../../core/Emitter';
 
 export class Excel {
-// export class Excel<AppClass extends AppComponent> {
 	private $parentEl;
-	private components;
+	private components!: Array<ComponentClass> | Array<Instance>;
+	public emitter: Emitter;
 
-	// constructor(selector: string, options: {components: Array<new (element: HTMLElement) => A> }) {
-	constructor(selector: string, options: {components: Array<any> }) { // !!!
+	constructor(selector: string, options: {components: Array<ComponentClass>}) { // !!!
 		this.$parentEl = $(selector);
 		this.components = options.components || [];
+		this.emitter = new Emitter();
 	}
 
-	private getRoot(): Dom {
-		const $root = $.create("div", "excel");
+	private getRoot(): DomInstance {
+		const $root = $.create('div', 'excel');
+		const componentOptions = {emitter: this.emitter};
 
 		this.components = this.components.map((Component) => {
-			const $el: Dom = $.create("div", Component.className); // вынести внутрь компонента
-			const component = new Component($el);
+			const $el: DomInstance = $.create('div', (<ComponentClass>Component).className); // корневой DOM для компонента
+			const component: Instance = new (<ComponentClass>Component)($el, componentOptions);
 			$el.html(component.toHTML());
 			$root.append($el);
 			return component;
@@ -29,6 +30,11 @@ export class Excel {
 
 	public render(): void {
 		this.$parentEl.append(this.getRoot());
-		this.components.forEach(component => component.init());
+		this.components.forEach(component => (<Instance>component).init());
+	}
+
+	private destroy() {
+		// this.subscriber.unsubscribeFromStore();
+		(<Array<Instance>>this.components).forEach((component) => component.destroy());
 	}
 }

@@ -1,22 +1,43 @@
-// import {Header} from "../components/header/Header";
-// import {Toolbar} from "../components/toolbar/Toolbar";
-// import {Formula} from "../components/formula/Formula";
-// import {Table} from "../components/table/Table";
-//
-export type ExcelComponentOptions = {name: string, listeners: Array<string>};
+import {DomInstance} from './dom';
+import {Emitter} from './Emitter';
+import {ExcelComponent} from './ExcelComponent';
 
-// export type ExcelComponentClass = Header | Toolbar | Formula | Table;
+export type ExcelComponentOptions = {name?: string, listeners?: Array<string>, emitter: Emitter,};
 
-// export enum ExcelComponentClasses {
-// 	Header = Header,
-// 	Toolbar = Toolbar,
-// 	Formula = Formula,
-// 	Table = Table,
-// }
+export type ComponentClass = {
+	new <T extends ExcelComponent>(element: DomInstance, options: ExcelComponentOptions): T,
+	className: string,
+};
 
-// export interface AppComponent {
-// 	className: string;
+type InstanceAddProp = {
+	toHTML: () => string,
+	init: () => void,
+};
+export type Instance = InstanceType<ComponentClass> & InstanceAddProp; // InstanceType - utility
+
+export interface cellId {
+	row: number,
+	col: number
+}
+
+export type Events = 'table:select' | 'table:input' | 'formula:input' | 'formula:done';
+export type EventHandler = ((text: string) => void) | (() => void) | (($cell: DomInstance) => void);
+
+// type EventZeroParams = 'formula:done';
+// type EventOneParams = 'table:select' | 'table:input' | 'formula:input';
+
+// type SubscriberParams = DomInstance | string;
+// export type VoidSubscriber = () => void;
+// export type EventSubscriber = (param: SubscriberParams) => void;
+
+// export type Handlers = {
+// 	($cell: DomInstance): void;
+// 	($cell: DomInstance): void;
+// 	(text: string): void;
+// 	(): void;
 // };
-//
-// export type AppClass<T> = new (element: HTMLElement) => T;
 
+// export type AddEvent = {
+// 	(eventName: EventZeroParams, fn: VoidSubscriber): (eventName: Events, fn: VoidSubscriber)=>boolean;
+// 	(eventName: EventOneParams, fn: EventSubscriber): (eventName: Events, fn: EventSubscriber)=>boolean;
+// }
