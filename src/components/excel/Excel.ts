@@ -1,21 +1,26 @@
-import {ComponentClass, Instance} from '../../core/types';
+import {ComponentClass, Instance, Store} from '../../core/types';
 import {$, DomInstance} from '../../core/dom';
 import {Emitter} from '../../core/Emitter';
 
 export class Excel {
 	private $parentEl;
 	private components!: Array<ComponentClass> | Array<Instance>;
-	public emitter: Emitter;
+	private emitter: Emitter;
+	private store: Store;
 
-	constructor(selector: string, options: {components: Array<ComponentClass>}) { // !!!
+	constructor(selector: string, options: {components: Array<ComponentClass>, store: Store}) {
 		this.$parentEl = $(selector);
 		this.components = options.components || [];
 		this.emitter = new Emitter();
+		this.store = options.store; // store
 	}
 
 	private getRoot(): DomInstance {
 		const $root = $.create('div', 'excel');
-		const componentOptions = {emitter: this.emitter};
+		const componentOptions = {
+			emitter: this.emitter,
+			store: this.store,
+		};
 
 		this.components = this.components.map((Component) => {
 			const $el: DomInstance = $.create('div', (<ComponentClass>Component).className); // корневой DOM для компонента

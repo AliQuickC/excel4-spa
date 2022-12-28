@@ -1,3 +1,5 @@
+import { State } from './types';
+
 // формирует имя события, делает верхний регистр для первой буквы
 export function capitalize(string: string): string {
 	if (typeof string !== 'string') {
@@ -13,4 +15,11 @@ export function range(start: number, end: number): number[] {
 	return new Array(end - start + 1)
 		.fill('')
 		.map((_: unknown, index: number) => start + index);
+}
+
+export function storage(key: string, data: State | null = null) { // читает/пишет в locale storage
+	if (!data) { //                                // если параметр data не указан
+		return JSON.parse(<string>localStorage.getItem(key)); // считываем значение 'excel-state'
+	} //                                            // иначе если data есть
+	localStorage.setItem(key, JSON.stringify(data)); // записываем data в local store
 }

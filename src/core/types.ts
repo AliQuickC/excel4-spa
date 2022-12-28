@@ -2,7 +2,54 @@ import {DomInstance} from './dom';
 import {Emitter} from './Emitter';
 import {ExcelComponent} from './ExcelComponent';
 
-export type ExcelComponentOptions = {name?: string, listeners?: Array<string>, emitter: Emitter,};
+export type ReduxGetState = () => State;
+
+export type ReduxDispatch = (action: Action) => void;
+
+// export type ReduxSubscribe = ( fn: (args: Array<any>) => void ) => ReduxUnSubscribe;
+export type ReduxSubscribe = ( fn: (state: State) => void ) => ReduxUnSubscribe;
+
+export type ReduxUnSubscribe = {
+	unsubscribe: ()=>void;
+};
+
+export type Store = {
+	getState: ReduxGetState;
+	dispatch: ReduxDispatch;
+	subscribe: ReduxSubscribe;
+}
+
+// export type Store = {
+// 	getState: () => State;
+// 	dispatch: (action: Action) => void;
+// 	subscribe: (fn: (...args: Array<any>) => void) => {unsubscribe: ()=>void};
+// }
+
+export type ActionData = {id: string, value: number};
+
+export type ColState = {[id: string]: number};
+export type State = {
+	colState: ColState;
+	// colState: {[key: string]: string};
+};
+
+
+export type Action = {
+	type: ActionType
+	data?: ActionData
+}
+
+export enum ActionType {
+	Init = '__INIT__',
+	TableResize = 'TABLE_RESIZE',
+	ChangeText = 'CHANGE_TEXT',
+	ApplyStyle = 'APPLY_STYLE',
+	ChangeStyles = 'CHANGE_STYLES',
+	ChangeTitle = 'CHANGE_TITLE',
+	UpdateDate = 'UPDATE_DATE',
+}
+
+export type ExcelComponentOptions = {name?: string, listeners?: Array<string>, emitter: Emitter, store: Store};
 
 export type ComponentClass = {
 	new <T extends ExcelComponent>(element: DomInstance, options: ExcelComponentOptions): T,

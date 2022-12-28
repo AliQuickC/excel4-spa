@@ -1,25 +1,38 @@
+import { ColState, State } from '../../core/types';
+
 const CODES = {
 	A: 65,
 	Z: 90
 };
 
-// const DEFAULT_WIDTH = 120;
+const DEFAULT_WIDTH = 120;
 // const DEFAULT_HEIGHT = 24;
 
-function toCell(row: number) {
+function getWidth(state: ColState, index: keyof State): string {
+	return (state[index] || DEFAULT_WIDTH) + 'px';
+}
+
+// function getHeight(state: State, index: keyof State): string {
+// 	return (state[index] || DEFAULT_HEIGHT) + 'px';
+// }
+
+function toCell(state: State, row: number) {
 	return function (_: unknown, col: number) {
+		const width = getWidth(state.colState, col.toString() as keyof State); // ширина столбца + px
 		return	`<div
 							class="cell"
 							contenteditable
 							data-type="cell"
 							data-id=${row}:${col}
 							data-col="${col}"
+							style="width: ${width}"
 						></div>`;
 	};
 }
 
-function toColumn(colChar: string, index: number) { // для каждого элемента массива(заголовка столбца) формируем верстку ячейки
-	return `<div class="column" data-type="resizable" data-col="${index}">
+function toColumn({colChar, index, width}: {colChar: string, index: number, width: string}): string { // для каждого элемента массива(заголовка столбца) формируем верстку ячейки
+	console.log('width: ', width);
+	return `<div class="column" data-type="resizable" data-col="${index}" style="width: ${width}">
 						${colChar}
 						<div class="col-resize" data-resize="col"></div> <!--маркер для изсменения размера столбцов-->
 					</div>`;
@@ -38,12 +51,21 @@ function createRow(rowCount: number | null, content: string) {
 	`;
 }
 
+function widthWidthFrom(state: State) {
+	return function(colChar: string, index: number): {colChar: string, index: number, width: string} {
+		return {
+			colChar, index, width: getWidth(state.colState, index.toString() as keyof State) // высчитывает значение ширины колонки
+		};
+	};
+}
+
 function toChar(_: string, index:number): string {
 	return String.fromCharCode(CODES.A + index);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function createTable(rowsCount = 15, state = {}): string { // вывод верстки таблици
+export function createTable(rowsCount = 15, state: State = {} as State): string { // вывод верстки таблици
+	console.log('state: ', state);
 	const colsCount = CODES.Z - CODES.A + 1; // количество столбцов в таблице
 	const rows = [];
 
@@ -51,8 +73,10 @@ export function createTable(rowsCount = 15, state = {}): string { // вывод 
 	const cols = new Array(colsCount)
 		.fill('') // массив пустых строк, для каждой ячейки
 		.map(toChar) // преобразование кодов символов в символы, заполнение массива символами
-		//	после ф-ция, формирует объект(массив объектов) с параметрами, для отрисовки колонки
+		.map(widthWidthFrom(state)) // в map подставляется сформированая  ф-ция
+		// после ф-ция, формирует объект(массив объектов) с параметрами, для отрисовки колонки
 		.map(toColumn) // для каждого элемента массива(заголовка столбца) формируем верстку ячейки
+		// для каждого элемента массива(заголовка столбца) формируем верстку ячейки
 		.join('');	// склеиваем верстку всех ячеек в одну строку
 
 	rows.push(createRow(null, cols));
@@ -60,7 +84,7 @@ export function createTable(rowsCount = 15, state = {}): string { // вывод 
 	for (let row=0; row < rowsCount; row++) {
 		const cells = new Array(colsCount)
 			.fill('')
-			.map(toCell(row))
+			.map(toCell(state, row)) // для каждого элемента массива(ячейки) формируем верстку ячейки
 			.join('');
 		rows.push(createRow(row+1, cells));
 	}

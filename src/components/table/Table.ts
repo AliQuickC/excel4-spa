@@ -4,7 +4,8 @@ import {$, DomInstance} from '../../core/dom';
 import {resizeHandler} from './table.resize';
 import {isCell, matrix, nextSelector, shouldResize} from './table.functions';
 import {TableSelection} from './TableSelection';
-import {ExcelComponentOptions} from '../../core/types';
+import {ActionData, ActionType, ExcelComponentOptions} from '../../core/types';
+import * as actions from '../../redux/actions';
 
 export class Table extends ExcelComponent {
 	static readonly className = 'excel__table';
@@ -20,7 +21,7 @@ export class Table extends ExcelComponent {
 	}
 
 	public toHTML(): string {
-		return createTable(20);
+		return createTable(20, this.store.getState());
 	}
 
 	public prepare(): void { // запускается в конструкторе родительского класса
@@ -41,6 +42,10 @@ export class Table extends ExcelComponent {
 		this.$on('formula:done', (): void => { // добавить обработчик события, если в формуле Enter или Tab
 			this.selection.current.focus();	//				// смена фокуса из формулы на активную ячейку,
 		});
+
+		// this.$subscribe((state: State) => { // !!!
+		// 	console.log('TableState', state);
+		// });
 	}
 
 	// выбор ячейки DOM
@@ -53,16 +58,31 @@ export class Table extends ExcelComponent {
 		// const styles = $cell.getStyles(Object.keys(defaultStyles)); // считываем стили у выбранной ячейки, в объект
 		// styles - объект со всеми стилями для выделенной ячейки, Object.keys(defaultStyles) - массив ключей(css свойств)
 
+
+		// this.$dispath({ type: ActionType.Test }); // !!!
+
 		// сработка события, изменение state
 		// this.$dispatch(actions.changeStyles(styles));	// передаем объект со стилями styles,
-		//                                           	// меняем свйство currentStyles в state(rootReducer)
-		//                                           	// для компонент подписанных на изменение state(subscribeComponents),
-		//                                           	// storeChanged() Отображаем в соответствии с новым state
+		//																						// меняем свйство currentStyles в state(rootReducer)
+		//																						// для компонент подписанных на изменение state(subscribeComponents),
+		//																						// storeChanged() Отображаем в соответствии с новым state
+	}
+
+	async resizeTable(event: MouseEvent) {
+		try {
+			const data = await resizeHandler(this.$root, event) as ActionData; // обработка ресайза таблици
+			this.$dispatch(actions.tableResize(data)); // когда ресайз закончен, сработка события, изменение state
+			// this.$dispatch({type: ActionType.TableResize, data}); // когда ресайз закончен, сработка события, изменение state
+			// console.log('Resize data: ', data);
+		} catch (error: InstanceType<Error>) {
+			console.warn('Resize error', error.message);
+		}
 	}
 
 	protected onMousedown(event: MouseEvent): void {
 		if (shouldResize(event)) { // если событие произошло на маркере ресайза, и у элемента есть дата атрибут data-resize
-			resizeHandler(this.$root, event); // обработка ресайза таблици
+			this.resizeTable(event);
+			// resizeHandler(this.$root, event); // обработка ресайза таблици
 		} else if (isCell(event)) { // если событие произошло на ячейке
 			const $target: DomInstance = $(<HTMLElement>event.target);
 

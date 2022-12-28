@@ -1,6 +1,6 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
 import {$, DomInstance} from '../../core/dom';
-import {ExcelComponentOptions} from '../../core/types';
+import {ExcelComponentOptions, State} from '../../core/types';
 
 export class Formula extends ExcelComponent {
 	static className = 'excel__formula';
@@ -30,6 +30,10 @@ export class Formula extends ExcelComponent {
 			this.$formula.text($cell.text()); //  из дата атрибута ячейки
 			// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
 		});
+
+		// this.$subscribe((state: State) => { // !!!
+		// 	console.log('TableFormula', state);
+		// });
 	}
 
 	public prepare() { // запускается в конструкторе родительского класса
