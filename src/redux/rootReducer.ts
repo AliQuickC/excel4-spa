@@ -2,11 +2,13 @@ import { Action, ActionData, ActionType, ColState, State } from './../core/types
 
 export function rootReducer(state: State, action: Action): State {
 	let prevState;
+	let field: string; // ключ state
 	switch (action.type) {
 	case ActionType.TableResize:
-		prevState = state.colState || {} as ColState;
+		field = (<ActionData>action.data).resizerType === 'col' ? 'colState' : 'rowState';
+		prevState = state[field as keyof State] || {} as ColState;
 		prevState[(<ActionData>action.data).id] = (<ActionData>action.data).value;
-		return {...state, colState: prevState};
+		return {...state, [field]: prevState};
 	default:
 		return state;
 	}

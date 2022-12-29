@@ -42,7 +42,7 @@ export class Toolbar extends ExcelComponent {
 				</div>`;
 	}
 
-	protected onClick(event: Event): void {
-		console.log(event.target);
-	}
+	// protected onClick(event: Event): void {
+	// 	console.log(event.target);
+	// }
 }

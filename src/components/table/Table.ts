@@ -35,7 +35,6 @@ export class Table extends ExcelComponent {
 		this.selectCell(this.$root.find('[data-id="0:0"]')); // делаем DOM ячейку выбранной, при открытии документа
 
 		this.$on('formula:input', (text: string): void => {
-			// console.log('text', text);
 			this.selection.current.text(text);
 		});
 
@@ -43,9 +42,6 @@ export class Table extends ExcelComponent {
 			this.selection.current.focus();	//				// смена фокуса из формулы на активную ячейку,
 		});
 
-		// this.$subscribe((state: State) => { // !!!
-		// 	console.log('TableState', state);
-		// });
 	}
 
 	// выбор ячейки DOM
@@ -73,7 +69,6 @@ export class Table extends ExcelComponent {
 			const data = await resizeHandler(this.$root, event) as ActionData; // обработка ресайза таблици
 			this.$dispatch(actions.tableResize(data)); // когда ресайз закончен, сработка события, изменение state
 			// this.$dispatch({type: ActionType.TableResize, data}); // когда ресайз закончен, сработка события, изменение state
-			// console.log('Resize data: ', data);
 		} catch (error: InstanceType<Error>) {
 			console.warn('Resize error', error.message);
 		}
@@ -118,9 +113,5 @@ export class Table extends ExcelComponent {
 
 	onInput(event: KeyboardEvent): void {
 		this.$emit('table:input', $(<HTMLElement>event.target));
-	}
-
-	onMouseup(): void {
-		console.log('mouseup');
 	}
 }

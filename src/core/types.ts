@@ -25,11 +25,13 @@ export type Store = {
 // 	subscribe: (fn: (...args: Array<any>) => void) => {unsubscribe: ()=>void};
 // }
 
-export type ActionData = {id: string, value: number};
+export type ActionData = {resizerType: string, id: string, value: number};
 
 export type ColState = {[id: string]: number};
+export type RowState = {[id: string]: number};
 export type State = {
 	colState: ColState;
+	rowState: RowState;
 	// colState: {[key: string]: string};
 };
 

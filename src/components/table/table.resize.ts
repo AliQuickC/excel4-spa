@@ -38,8 +38,9 @@ export function resizeHandler($root: DomInstance, event: Event) { // обраб�
 			}
 
 			resolve({
+				resizerType,
 				value,
-				id: resizerType === 'col' ? $parent.data.col : null,
+				id: resizerType === 'col' ? $parent.data.col : $parent.data.row,
 			});
 
 			$resizer.css({opacity: '0', bottom: '0', right: '0'}); // для маркера, устанавливаем начальное положение

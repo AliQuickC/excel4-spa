@@ -1,4 +1,4 @@
-import { ColState, State } from '../../core/types';
+import { ColState, RowState, State } from '../../core/types';
 
 const CODES = {
 	A: 65,
@@ -6,19 +6,19 @@ const CODES = {
 };
 
 const DEFAULT_WIDTH = 120;
-// const DEFAULT_HEIGHT = 24;
+const DEFAULT_HEIGHT = 24;
 
 function getWidth(state: ColState, index: keyof State): string {
 	return (state[index] || DEFAULT_WIDTH) + 'px';
 }
 
-// function getHeight(state: State, index: keyof State): string {
-// 	return (state[index] || DEFAULT_HEIGHT) + 'px';
-// }
+function getHeight(state: RowState, index: keyof State): string {
+	return (state[index] || DEFAULT_HEIGHT) + 'px';
+}
 
-function toCell(state: State, row: number) {
+function toCell(state: ColState, row: number) {
 	return function (_: unknown, col: number) {
-		const width = getWidth(state.colState, col.toString() as keyof State); // ширина столбца + px
+		const width = getWidth(state, col.toString() as keyof State); // ширина столбца + px
 		return	`<div
 							class="cell"
 							contenteditable
@@ -31,17 +31,17 @@ function toCell(state: State, row: number) {
 }
 
 function toColumn({colChar, index, width}: {colChar: string, index: number, width: string}): string { // для каждого элемента массива(заголовка столбца) формируем верстку ячейки
-	console.log('width: ', width);
 	return `<div class="column" data-type="resizable" data-col="${index}" style="width: ${width}">
 						${colChar}
 						<div class="col-resize" data-resize="col"></div> <!--маркер для изсменения размера столбцов-->
 					</div>`;
 }
 
-function createRow(rowCount: number | null, content: string) {
+function createRow(rowCount: number | null, content: string, state: RowState) {
 	const resizer = rowCount ? '<div class="row-resize" data-resize="row"></div>' : '';
+	const height = rowCount === null ? 'auto' : getHeight(state, rowCount.toString() as keyof State);
 	return `
-	<div class="row" data-type="resizable">
+	<div class="row" data-type="resizable" data-row="${rowCount}" style="height: ${height}">
 		<div class="row-info">
 			${rowCount ? rowCount : ''}
 			${resizer} <!-- маркер для изменения размера строк-->
@@ -65,7 +65,6 @@ function toChar(_: string, index:number): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function createTable(rowsCount = 15, state: State = {} as State): string { // вывод верстки таблици
-	console.log('state: ', state);
 	const colsCount = CODES.Z - CODES.A + 1; // количество столбцов в таблице
 	const rows = [];
 
@@ -79,14 +78,14 @@ export function createTable(rowsCount = 15, state: State = {} as State): string 
 		// для каждого элемента массива(заголовка столбца) формируем верстку ячейки
 		.join('');	// склеиваем верстку всех ячеек в одну строку
 
-	rows.push(createRow(null, cols));
+	rows.push(createRow(null, cols, {}));
 
 	for (let row=0; row < rowsCount; row++) {
 		const cells = new Array(colsCount)
 			.fill('')
-			.map(toCell(state, row)) // для каждого элемента массива(ячейки) формируем верстку ячейки
+			.map(toCell(state.colState, row)) // для каждого элемента массива(ячейки) формируем верстку ячейки
 			.join('');
-		rows.push(createRow(row+1, cells));
+		rows.push(createRow(row+1, cells, state.rowState));
 	}
 
 	// вывод верстки всей таблици

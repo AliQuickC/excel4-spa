@@ -4,14 +4,13 @@ import {Header} from './components/header/Header';
 import {Toolbar} from './components/toolbar/Toolbar';
 import {Formula} from './components/formula/Formula';
 import {Table} from './components/table/Table';
-import {ComponentClass, ColState, State} from './core/types';
+import {ComponentClass, State} from './core/types';
 import { rootReducer } from './redux/rootReducer';
 import { createStore } from './core/createStore';
 import { storage } from './core/utils';
+import { initialState } from './redux/initialState';
 
-const store = createStore(rootReducer, storage('excel-state') || {
-	colState: {} as ColState
-});
+const store = createStore(rootReducer, initialState);
 
 store.subscribe((state: State) => {
 	console.log('App State', state);

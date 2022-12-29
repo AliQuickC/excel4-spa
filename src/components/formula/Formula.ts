@@ -31,9 +31,6 @@ export class Formula extends ExcelComponent {
 			// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
 		});
 
-		// this.$subscribe((state: State) => { // !!!
-		// 	console.log('TableFormula', state);
-		// });
 	}
 
 	public prepare() { // запускается в конструкторе родительского класса
