@@ -4,7 +4,7 @@ import {$, DomInstance} from '../../core/dom';
 import {resizeHandler} from './table.resize';
 import {isCell, matrix, nextSelector, shouldResize} from './table.functions';
 import {TableSelection} from './TableSelection';
-import {ActionData, ActionType, ExcelComponentOptions} from '../../core/types';
+import {ActionDataResize, ExcelComponentOptions} from '../../core/types';
 import * as actions from '../../redux/actions';
 
 export class Table extends ExcelComponent {
@@ -35,7 +35,8 @@ export class Table extends ExcelComponent {
 		this.selectCell(this.$root.find('[data-id="0:0"]')); // делаем DOM ячейку выбранной, при открытии документа
 
 		this.$on('formula:input', (text: string): void => {
-			this.selection.current.text(text);
+			this.selection.current.text(text); // !!! меняем не из store
+			this.updateTextInStore(text);
 		});
 
 		this.$on('formula:done', (): void => { // добавить обработчик события, если в формуле Enter или Tab
@@ -54,9 +55,6 @@ export class Table extends ExcelComponent {
 		// const styles = $cell.getStyles(Object.keys(defaultStyles)); // считываем стили у выбранной ячейки, в объект
 		// styles - объект со всеми стилями для выделенной ячейки, Object.keys(defaultStyles) - массив ключей(css свойств)
 
-
-		// this.$dispath({ type: ActionType.Test }); // !!!
-
 		// сработка события, изменение state
 		// this.$dispatch(actions.changeStyles(styles));	// передаем объект со стилями styles,
 		//																						// меняем свйство currentStyles в state(rootReducer)
@@ -66,7 +64,7 @@ export class Table extends ExcelComponent {
 
 	async resizeTable(event: MouseEvent) {
 		try {
-			const data = await resizeHandler(this.$root, event) as ActionData; // обработка ресайза таблици
+			const data = await resizeHandler(this.$root, event) as ActionDataResize; // обработка ресайза таблици
 			this.$dispatch(actions.tableResize(data)); // когда ресайз закончен, сработка события, изменение state
 			// this.$dispatch({type: ActionType.TableResize, data}); // когда ресайз закончен, сработка события, изменение state
 		} catch (error: InstanceType<Error>) {
@@ -111,7 +109,19 @@ export class Table extends ExcelComponent {
 		}
 	}
 
+	updateTextInStore(value: string) { // обновление данных в state
+		this.$dispatch(actions.changeText({ // сработка события, изменение state,
+			//                                     // меняет currentText и dataState в state(rootReducer)
+			//                                     // для компонент подписанных на изменение state(subscribeComponents),
+			//                                     // storeChanged() Отображаем в соответствии с новым state (данные в формуле)
+			id: this.selection.current.id(), // получаем из выделенной ячейки, значение data-id, id() метод класса Dom
+			value //                         // содержимое ячейки
+		}));
+	}
+
 	onInput(event: KeyboardEvent): void {
-		this.$emit('table:input', $(<HTMLElement>event.target));
+		// this.$emit('table:input', $(<HTMLElement>event.target));
+		this.updateTextInStore($(event.target as HTMLElement).text()); // обновление данных в state
+		//                                             // обновление данных в формуле
 	}
 }

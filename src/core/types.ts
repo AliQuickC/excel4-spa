@@ -25,14 +25,20 @@ export type Store = {
 // 	subscribe: (fn: (...args: Array<any>) => void) => {unsubscribe: ()=>void};
 // }
 
-export type ActionData = {resizerType: string, id: string, value: number};
+export type ActionData = ActionDataResize | ActionDataChangeText;
+export type ActionDataResize = {resizerType: string, id: string, value: number};
+export type ActionDataChangeText = {id: string, value: string};
+export type ActionDataCellsData = {[key: string]: string};
 
-export type ColState = {[id: string]: number};
-export type RowState = {[id: string]: number};
+
+// export type ColState = {[id: string]: number};
+// export type RowState = {[id: string]: number};
+export type ColsOrRowState = {[id: string]: number};
 export type State = {
-	colState: ColState;
-	rowState: RowState;
-	// colState: {[key: string]: string};
+	colState: ColsOrRowState;
+	rowState: ColsOrRowState;
+	cellsDataState: ActionDataCellsData,
+	currentText: string,
 };
 
 

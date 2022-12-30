@@ -1,14 +1,14 @@
-import { ActionData, ActionType } from '../core/types';
+import { ActionDataChangeText, ActionDataResize, ActionType } from '../core/types';
 
 // Action Creators
-export function tableResize(data: ActionData): {type: ActionType, data: ActionData} {
+export function tableResize(data: ActionDataResize): {type: ActionType, data: ActionDataResize} {
 	return {
 		type: ActionType.TableResize,
 		data
 	};
 }
 
-export function changeText<T>(data: T): {type: ActionType, data: T} {
+export function changeText(data: ActionDataChangeText): {type: ActionType, data: ActionDataChangeText} {
 	return {
 		type: ActionType.ChangeText,
 		data

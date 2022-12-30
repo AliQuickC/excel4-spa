@@ -25,10 +25,14 @@ export class Formula extends ExcelComponent {
 			// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
 		});
 
-		this.$on('table:input', ($cell: DomInstance): void => { // добавить обработчик события
-			//               // при вводе в ячейку таблицы, показываем в формуле данные,
-			this.$formula.text($cell.text()); //  из дата атрибута ячейки
-			// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
+		// this.$on('table:input', ($cell: DomInstance): void => { // добавить обработчик события
+		// 	//               // при вводе в ячейку таблицы, показываем в формуле данные,
+		// 	this.$formula.text($cell.text()); //  из дата атрибута ячейки
+		// 	// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
+		// });
+
+		this.$subscribe(state => {
+			this.$formula.text(state.currentText);
 		});
 
 	}

@@ -1,4 +1,5 @@
-import { ColState, RowState, State } from '../../core/types';
+import { parse } from '../../core/parse';
+import { ColsOrRowState, State } from '../../core/types';
 
 const CODES = {
 	A: 65,
@@ -8,25 +9,27 @@ const CODES = {
 const DEFAULT_WIDTH = 120;
 const DEFAULT_HEIGHT = 24;
 
-function getWidth(state: ColState, index: keyof State): string {
+function getWidth(state: ColsOrRowState, index: keyof State): string {
 	return (state[index] || DEFAULT_WIDTH) + 'px';
 }
 
-function getHeight(state: RowState, index: keyof State): string {
+function getHeight(state: ColsOrRowState, index: keyof State): string {
 	return (state[index] || DEFAULT_HEIGHT) + 'px';
 }
 
-function toCell(state: ColState, row: number) {
+function toCell(state: State, row: number) {
 	return function (_: unknown, col: number) {
-		const width = getWidth(state, col.toString() as keyof State); // ширина столбца + px
+		const id = `${row}:${col}`;
+		const width = getWidth(state.colState, col.toString() as keyof State); // ширина столбца + px
+		const data = state.cellsDataState[id]; // содержимое ячейки
 		return	`<div
 							class="cell"
 							contenteditable
 							data-type="cell"
-							data-id=${row}:${col}
+							data-id=${id}
 							data-col="${col}"
 							style="width: ${width}"
-						></div>`;
+						>${parse(data) || ''}</div>`;
 	};
 }
 
@@ -37,7 +40,7 @@ function toColumn({colChar, index, width}: {colChar: string, index: number, widt
 					</div>`;
 }
 
-function createRow(rowCount: number | null, content: string, state: RowState) {
+function createRow(rowCount: number | null, content: string, state: ColsOrRowState) {
 	const resizer = rowCount ? '<div class="row-resize" data-resize="row"></div>' : '';
 	const height = rowCount === null ? 'auto' : getHeight(state, rowCount.toString() as keyof State);
 	return `
@@ -83,7 +86,7 @@ export function createTable(rowsCount = 15, state: State = {} as State): string 
 	for (let row=0; row < rowsCount; row++) {
 		const cells = new Array(colsCount)
 			.fill('')
-			.map(toCell(state.colState, row)) // для каждого элемента массива(ячейки) формируем верстку ячейки
+			.map(toCell(state, row)) // для каждого элемента массива(ячейки) формируем верстку ячейки
 			.join('');
 		rows.push(createRow(row+1, cells, state.rowState));
 	}
