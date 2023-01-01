@@ -1,4 +1,4 @@
-import { State } from './types';
+import { State, StatePropertyValue } from './types';
 
 // формирует имя события, делает верхний регистр для первой буквы
 export function capitalize(string: string): string {
@@ -22,4 +22,11 @@ export function storage(key: string, data: State | null = null) { // читае�
 		return JSON.parse(<string>localStorage.getItem(key)); // считываем значение 'excel-state'
 	} //                                            // иначе если data есть
 	localStorage.setItem(key, JSON.stringify(data)); // записываем data в local store
+}
+
+export function isEqual(a: StatePropertyValue, b: StatePropertyValue): boolean {
+	if (typeof a === 'object' && typeof b === 'object') {
+		return JSON.stringify(a) === JSON.stringify(b); // преобразуем объект к строке
+	}
+	return a === b;
 }

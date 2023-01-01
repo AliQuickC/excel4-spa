@@ -1,6 +1,6 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
 import {$, DomInstance} from '../../core/dom';
-import {ExcelComponentOptions, State} from '../../core/types';
+import {ExcelComponentOptions, State, StatePropertyValue} from '../../core/types';
 
 export class Formula extends ExcelComponent {
 	static className = 'excel__formula';
@@ -10,6 +10,7 @@ export class Formula extends ExcelComponent {
 		super($root, {
 			name: 'Formula',
 			listeners: ['input', 'keydown'],
+			subscribe: ['currentText'],
 			...options
 		});
 	}
@@ -22,19 +23,7 @@ export class Formula extends ExcelComponent {
 		this.$on('table:select', ($cell: DomInstance): void => { // добавить обработчик события
 			//               // при выборе ячейки в таблице, показываем в формуле данные,
 			this.$formula.text($cell.text()); //  из дата атрибута ячейки
-			// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
 		});
-
-		// this.$on('table:input', ($cell: DomInstance): void => { // добавить обработчик события
-		// 	//               // при вводе в ячейку таблицы, показываем в формуле данные,
-		// 	this.$formula.text($cell.text()); //  из дата атрибута ячейки
-		// 	// this.$formula.text($cell.data.value); //  из дата атрибута ячейки
-		// });
-
-		this.$subscribe(state => {
-			this.$formula.text(state.currentText);
-		});
-
 	}
 
 	public prepare() { // запускается в конструкторе родительского класса
@@ -44,6 +33,11 @@ export class Formula extends ExcelComponent {
 		return `
 			<div class="info">fx</div>
 			<div class="input" id="formula"  contenteditable spellcheck="false"></div>`;
+	}
+
+	public storeChanged({currentText: currentText}: Partial<State>): void {
+		this.$formula.text(currentText as string);
+		console.log('FormulaChanges: ', currentText);
 	}
 
 	protected onInput(event: InputEvent): void {

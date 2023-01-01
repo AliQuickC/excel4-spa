@@ -41,6 +41,9 @@ export type State = {
 	currentText: string,
 };
 
+export type StatePropertyValue = ColsOrRowState | ColsOrRowState | ActionDataCellsData | string;
+
+export type StateProperty<T, K extends keyof T> = {K: T[K]};
 
 export type Action = {
 	type: ActionType
@@ -57,7 +60,7 @@ export enum ActionType {
 	UpdateDate = 'UPDATE_DATE',
 }
 
-export type ExcelComponentOptions = {name?: string, listeners?: Array<string>, emitter: Emitter, store: Store};
+export type ExcelComponentOptions = {name?: string, listeners?: Array<string>, subscribe?: Array<string>, emitter: Emitter, store: Store};
 
 export type ComponentClass = {
 	new <T extends ExcelComponent>(element: DomInstance, options: ExcelComponentOptions): T,

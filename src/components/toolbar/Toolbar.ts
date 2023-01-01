@@ -1,6 +1,6 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
 import {DomInstance} from '../../core/dom';
-import {ExcelComponentOptions} from '../../core/types';
+import {ExcelComponentOptions, StatePropertyValue} from '../../core/types';
 
 export class Toolbar extends ExcelComponent {
 	static className = 'excel__toolbar';
@@ -40,6 +40,10 @@ export class Toolbar extends ExcelComponent {
 				<div class="button">
 		<i class="material-icons">format_underlined</i>
 				</div>`;
+	}
+
+	storeChanged(changes: {[key: string]: StatePropertyValue}): void {
+		console.log('changes: ', changes);
 	}
 
 	// protected onClick(event: Event): void {

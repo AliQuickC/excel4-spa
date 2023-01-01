@@ -1,19 +1,21 @@
 import {DomListener} from './DomListener';
 import {DomInstance} from './dom';
-import { Action, EventHandler, Events, ExcelComponentOptions, ReduxUnSubscribe, State, Store } from './types';
+import { Action, EventHandler, Events, ExcelComponentOptions, ReduxUnSubscribe, State, StatePropertyValue, Store } from './types';
 import {Emitter} from './Emitter';
 
 export abstract class ExcelComponent extends DomListener {
 	public readonly name: string;
 	protected emitter: Emitter;
+	private subscribe: Array<string>;
 	protected store: Store;
 	private unsubscribers: Array<()=>void>;
-	private storeSub: ReduxUnSubscribe | null = null;
+	// private storeSub: ReduxUnSubscribe | null = null;
 
 	protected constructor($root: DomInstance, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
 		super($root, options.listeners);
 		this.name = options.name || '';
 		this.emitter = options.emitter;
+		this.subscribe = options.subscribe || [];
 		this.store = options.store;
 		this.unsubscribers = [];
 
@@ -43,10 +45,19 @@ export abstract class ExcelComponent extends DomListener {
 		this.store.dispatch(action);
 	}
 
-	// protected $subscribe(fn: (...args: Array<any>) => void): void {
-	protected $subscribe(fn: (state: State) => void): void {
-		this.storeSub = this.store.subscribe(fn);
+	// Сюда приходят изменения только по тем полям, на которые мы подписались
+	abstract storeChanged(changes:  Partial<State>): void;
+
+
+	// при изменение state, проверяем наличие подписки в this.subscribe, у компоненты для ключа key
+	public isWatching(key: string): boolean {
+		return this.subscribe.includes(key);
 	}
+
+	// protected $subscribe(fn: (...args: Array<any>) => void): void {
+	// protected $subscribe(fn: (state: State) => void): void {
+	// 	this.storeSub = this.store.subscribe(fn);
+	// }
 
 	// инициализация объекта DOM
 	// добавляет слушателей
@@ -59,6 +70,6 @@ export abstract class ExcelComponent extends DomListener {
 	public destroy(): void {
 		this.offComponentEvents(); // удаление событий для DOM элемента
 		this.unsubscribers.forEach(unsub => unsub()); // удаление подписок на события
-		this.storeSub?.unsubscribe();
+		// this.storeSub?.unsubscribe();
 	}
 }

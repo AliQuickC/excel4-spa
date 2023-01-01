@@ -1,5 +1,5 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
-import {ExcelComponentOptions} from '../../core/types';
+import {ExcelComponentOptions, StatePropertyValue} from '../../core/types';
 import {DomInstance} from '../../core/dom';
 
 export class Header extends ExcelComponent {
@@ -30,5 +30,9 @@ export class Header extends ExcelComponent {
 				</div>
 
 				</div>`;
+	}
+
+	storeChanged(changes: {[key: string]: StatePropertyValue}): void {
+		console.log('changes: ', changes);
 	}
 }

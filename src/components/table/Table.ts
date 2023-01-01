@@ -4,7 +4,7 @@ import {$, DomInstance} from '../../core/dom';
 import {resizeHandler} from './table.resize';
 import {isCell, matrix, nextSelector, shouldResize} from './table.functions';
 import {TableSelection} from './TableSelection';
-import {ActionDataResize, ExcelComponentOptions} from '../../core/types';
+import {ActionDataResize, ExcelComponentOptions, StatePropertyValue} from '../../core/types';
 import * as actions from '../../redux/actions';
 
 export class Table extends ExcelComponent {
@@ -117,6 +117,10 @@ export class Table extends ExcelComponent {
 			id: this.selection.current.id(), // получаем из выделенной ячейки, значение data-id, id() метод класса Dom
 			value //                         // содержимое ячейки
 		}));
+	}
+
+	storeChanged(changes: {[key: string]: StatePropertyValue}): void {
+		console.log('TableChanges: ', changes);
 	}
 
 	onInput(event: KeyboardEvent): void {

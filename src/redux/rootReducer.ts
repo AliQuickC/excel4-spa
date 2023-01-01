@@ -1,6 +1,7 @@
 import { Action, ActionDataCellsData, ActionDataChangeText, ActionDataResize, ActionType, ColsOrRowState, State } from './../core/types';
 
 export function rootReducer(state: State, action: Action): State {
+	// console.log('action: ', action);
 	let prevState;
 	let field: string; // ключ state
 	switch (action.type) {
