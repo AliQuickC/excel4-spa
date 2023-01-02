@@ -1,6 +1,6 @@
 import {DomListener} from './DomListener';
 import {DomInstance} from './dom';
-import { Action, EventHandler, Events, ExcelComponentOptions, ReduxUnSubscribe, State, StatePropertyValue, Store } from './types';
+import { Action, EventHandler, Events, ExcelComponentOptions, State, Store } from './types';
 import {Emitter} from './Emitter';
 
 export abstract class ExcelComponent extends DomListener {
@@ -9,7 +9,6 @@ export abstract class ExcelComponent extends DomListener {
 	private subscribe: Array<string>;
 	protected store: Store;
 	private unsubscribers: Array<()=>void>;
-	// private storeSub: ReduxUnSubscribe | null = null;
 
 	protected constructor($root: DomInstance, options: ExcelComponentOptions = {} as ExcelComponentOptions) {
 		super($root, options.listeners);
@@ -29,13 +28,11 @@ export abstract class ExcelComponent extends DomListener {
 	abstract prepare(): void;
 
 	// вызов события
-	// protected $emit(event: Events): void
 	protected $emit(event: Events, ...args: Array<any>): void {
 		this.emitter.emit(event, ...args);
 	}
 
 	// добавить обработчик события event (подписка)
-	// protected $on(event: string, fn: (args: any) =>void) {
 	protected $on(event: Events, fn: 	EventHandler): void {
 		const unsub = this.emitter.addEventListener(event, fn);
 		this.unsubscribers.push(unsub);
@@ -46,18 +43,13 @@ export abstract class ExcelComponent extends DomListener {
 	}
 
 	// Сюда приходят изменения только по тем полям, на которые мы подписались
-	abstract storeChanged(changes:  Partial<State>): void;
+	abstract storeChanged(changes: Partial<State>): void;
 
 
 	// при изменение state, проверяем наличие подписки в this.subscribe, у компоненты для ключа key
 	public isWatching(key: string): boolean {
 		return this.subscribe.includes(key);
 	}
-
-	// protected $subscribe(fn: (...args: Array<any>) => void): void {
-	// protected $subscribe(fn: (state: State) => void): void {
-	// 	this.storeSub = this.store.subscribe(fn);
-	// }
 
 	// инициализация объекта DOM
 	// добавляет слушателей
@@ -70,6 +62,5 @@ export abstract class ExcelComponent extends DomListener {
 	public destroy(): void {
 		this.offComponentEvents(); // удаление событий для DOM элемента
 		this.unsubscribers.forEach(unsub => unsub()); // удаление подписок на события
-		// this.storeSub?.unsubscribe();
 	}
 }

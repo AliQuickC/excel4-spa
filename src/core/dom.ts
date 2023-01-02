@@ -1,6 +1,5 @@
-import {cellId} from './types';
+import {cellId, Style} from './types';
 
-interface Style {[key: string]: string}
 export type DomInstance = InstanceType<typeof Dom>;
 
 class Dom {
@@ -24,12 +23,12 @@ class Dom {
 	public text(): string;
 	public text(text: string): DomInstance;
 	public text(text?: string | undefined): DomInstance | string { // заполняет содержимое элемента текстом
-		if (typeof text !== 'undefined') { // если в элемент введен текст
-			this.$el.textContent = text; //  меняем свойство textContent (текстовое содержимое элемента)
+		if (typeof text !== 'undefined') {	// если в элемент введен текст
+			this.$el.textContent = text;			// меняем свойство textContent (текстовое содержимое элемента)
 			return this;
 		}
 		if (this.$el.tagName.toLowerCase() === 'input') { // если элемент типа input
-			return (<HTMLInputElement>this.$el).value.trim(); //                // меняем свойство value
+			return (<HTMLInputElement>this.$el).value.trim(); //							// меняем свойство value
 		}
 		return (this.$el.textContent as keyof Node).trim();
 	}
@@ -81,7 +80,7 @@ class Dom {
 		return this.$el.querySelectorAll(selector);
 	}
 
-	public css<T extends CSSStyleDeclaration>(styles: {[key: string]: string}): void { // преобразует стили из объекта в css свойство
+	public css<T extends CSSStyleDeclaration>(styles: Style): void { // преобразует стили из объекта в css свойство
 		Object
 			.keys(styles)
 			.forEach((key) => (<T>(this.$el.style))[key as keyof T] = (styles)[key] as T[keyof T]);
@@ -118,7 +117,7 @@ class Dom {
 
 	public getStyles(styles: Array<string> = []): Style { // считывает css стили DOM элемента, сохраняем в объект
 		// для каждого свойства(элемента массива), считывает css значение
-		return styles.reduce((res: Style, s:  keyof Style) => {
+		return styles.reduce((res: Style, s: keyof Style) => {
 			(res)[s] = ((this.$el.style)[s as keyof CSSStyleDeclaration]) as string; // формируем объект со стилями
 			return res;
 		}, {});

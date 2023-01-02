@@ -15,15 +15,14 @@ export class StoreSubscriber {
 
 		this.sub = this.store.subscribe(state => { // добавляем подписку на изменение state
 			Object.keys(state).forEach((key) => { // список ключей объекта state (rowState, colState, cellsDataState, currentText и т.д.)
-				console.log('key: ', key);
 				if (!isEqual(this.prevState[key as keyof State], state[key as keyof State])) { // сравниваем состояние state, предыдущее и сейчас,
-					//                                             // если есть различия по ключу key
+					//																					// если есть различия по ключу key
 					components.forEach(component => { // перебираем массив объектов
-						if (component.isWatching(key)) { // если ключ key, есть в массиве подписок this.subscribe у компоненты,
-							//                         // передаваемом(параметр options.subscribe) в конструктор, объекта(компоненты),
-							//                         // каждый элемент массива, название поля в объекте state
+						if (component.isWatching(key)) {	// если ключ key, есть в массиве подписок this.subscribe у компоненты,
+							//															// передаваемом(параметр options.subscribe) в конструктор, объекта(компоненты),
+							//															// каждый элемент массива, название поля в объекте state
 							const changes = {[key as keyof State]: state[key as keyof State]}; // сохраняем новое значение state, для ключа key
-							component.storeChanged(changes); //  // Отображаем в соответствии с новым state, компонент(объект "Типа")
+							component.storeChanged(changes); // Отображаем в соответствии с новым state, компонент(объект "Типа")
 						}
 					});
 				}

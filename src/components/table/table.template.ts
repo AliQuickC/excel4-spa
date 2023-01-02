@@ -1,5 +1,7 @@
+import { defaultStyles } from '../../constants';
 import { parse } from '../../core/parse';
 import { ColsOrRowState, State } from '../../core/types';
+import { toInlineStyles } from '../../core/utils';
 
 const CODES = {
 	A: 65,
@@ -22,13 +24,16 @@ function toCell(state: State, row: number) {
 		const id = `${row}:${col}`;
 		const width = getWidth(state.colState, col.toString() as keyof State); // ширина столбца + px
 		const data = state.cellsDataState[id]; // содержимое ячейки
+		const styles = toInlineStyles({ // строка со всеми стилями ячейки
+			...defaultStyles, // объект с дефолтными стилями,
+			...state.stylesState[id]}); // объект со стилями, для которых есть значеня в state
 		return	`<div
 							class="cell"
 							contenteditable
 							data-type="cell"
 							data-id=${id}
 							data-col="${col}"
-							style="width: ${width}"
+							style="${styles}; width: ${width}"
 						>${parse(data) || ''}</div>`;
 	};
 }
@@ -66,7 +71,6 @@ function toChar(_: string, index:number): string {
 	return String.fromCharCode(CODES.A + index);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function createTable(rowsCount = 15, state: State = {} as State): string { // вывод верстки таблици
 	const colsCount = CODES.Z - CODES.A + 1; // количество столбцов в таблице
 	const rows = [];
@@ -75,7 +79,7 @@ export function createTable(rowsCount = 15, state: State = {} as State): string 
 	const cols = new Array(colsCount)
 		.fill('') // массив пустых строк, для каждой ячейки
 		.map(toChar) // преобразование кодов символов в символы, заполнение массива символами
-		.map(widthWidthFrom(state)) // в map подставляется сформированая  ф-ция
+		.map(widthWidthFrom(state)) // в map подставляется сформированая ф-ция
 		// после ф-ция, формирует объект(массив объектов) с параметрами, для отрисовки колонки
 		.map(toColumn) // для каждого элемента массива(заголовка столбца) формируем верстку ячейки
 		// для каждого элемента массива(заголовка столбца) формируем верстку ячейки

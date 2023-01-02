@@ -1,25 +1,32 @@
-import { Action, ActionDataCellsData, ActionDataChangeText, ActionDataResize, ActionType, ColsOrRowState, State } from './../core/types';
+import { Action, ActionDataApplyStyle, ActionDataChangeText, ActionDataResize, ActionType, ApplyStyle, ReducerData, State, ToolbarState } from './../core/types';
 
 export function rootReducer(state: State, action: Action): State {
-	// console.log('action: ', action);
-	let prevState;
 	let field: string; // ключ state
+	let val: ApplyStyle; // значение по ключу state
 	switch (action.type) {
 	case ActionType.TableResize:
 		field = (<ActionDataResize>action.data).resizerType === 'col' ? 'colState' : 'rowState';
-		prevState = state[field as keyof State] || {} as ColsOrRowState;
-		(<ColsOrRowState>prevState)[(<ActionDataResize>action.data).id] = (<ActionDataResize>action.data).value;
-		return {...state, [field]: prevState};
+		return {...state, [field]: value(state, field as keyof State, action)};	// меняет объект colState или rowState
 	case ActionType.ChangeText:
 		field = 'cellsDataState';
-		// prevState = state[field] || {}
-		// prevState[action.data.id] = action.data.value // добавляем свойство, объекту state.dataState
-		// console.log(field)
 		return {
 			...state,
 			currentText: (<ActionDataChangeText>action.data).value, // меняет currentText
-			// dataState: prevState
-			[field]: value(state, field as keyof State, action) // меняет cellsDataState
+			[field]: value(state, field as keyof State, action) // меняет объект cellsDataState
+		};
+	case ActionType.ChangeStyles:
+		return {...state, currentStyles: action.data as ToolbarState};
+	case ActionType.ApplyStyle:
+		field = 'stylesState';
+		val = state[field as keyof State] as ApplyStyle || {}; // state.stylesState
+		(<ActionDataApplyStyle>action.data).ids.forEach(id => { // для каждого id, из массива выделенных ячеек
+			val[id] = {...val[id], ...(<ActionDataApplyStyle>action.data).value}; // считываем из state все стили выбранной ячейки,
+			// state.stylesState[id] объект со всеми стилями, добавляем в него, меняемый стиль
+		});
+		return {
+			...state,
+			[field]: val,
+			currentStyles: {...state.currentStyles, ...(<ActionDataApplyStyle>action.data).value}
 		};
 	default:
 		return state;
@@ -27,8 +34,8 @@ export function rootReducer(state: State, action: Action): State {
 }
 
 // возвращает новое значение, части объекта state.
-function value(state: State, field: keyof State, action: Action): ActionDataCellsData {
-	const val = state[field] as ActionDataCellsData || {}; // часть объекта state, полученная по ключу field
-	val[(<ActionDataCellsData>action.data).id] = (<ActionDataCellsData>action.data).value as string; // добавляем свойство объекту
-	return val;
+function value(state: State, field: keyof State, action: Action): ReducerData {
+	const val = state[field as keyof State] || {};	// часть объекта state, полученная по ключу field
+	(<ReducerData>val)[(<ReducerData>action.data).id as keyof ReducerData] = (<ReducerData>action.data).value as string; // добавляем свойство объекту
+	return val as ReducerData;
 }

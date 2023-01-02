@@ -1,4 +1,4 @@
-import { State, StatePropertyValue } from './types';
+import { State, StatePropertyValue, Style } from './types';
 
 // формирует имя события, делает верхний регистр для первой буквы
 export function capitalize(string: string): string {
@@ -18,9 +18,9 @@ export function range(start: number, end: number): number[] {
 }
 
 export function storage(key: string, data: State | null = null) { // читает/пишет в locale storage
-	if (!data) { //                                // если параметр data не указан
+	if (!data) { //																									// если параметр data не указан
 		return JSON.parse(<string>localStorage.getItem(key)); // считываем значение 'excel-state'
-	} //                                            // иначе если data есть
+	} //																										// иначе если data есть
 	localStorage.setItem(key, JSON.stringify(data)); // записываем data в local store
 }
 
@@ -30,3 +30,16 @@ export function isEqual(a: StatePropertyValue, b: StatePropertyValue): boolean {
 	}
 	return a === b;
 }
+
+// преобразует написание ключей объекта, из всех объектов(css свойств), формирует одну строку
+export function toInlineStyles(styles: Style = {}): string {
+	return Object.keys(styles) // список всех стилей какие есть, преобразуем в массив
+		.map(key => `${camelToDasheCase(key)}: ${styles[key]}`) // camelToDasheCase - меняет стиль написания ключей объекта
+		//					// формируем массив строк, из "css свойство" : "значение"
+		.join(';'); // собираем массив в одну строку
+}
+
+export function camelToDasheCase(str: string): string {
+	return str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
+}
+

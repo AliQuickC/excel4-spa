@@ -19,7 +19,7 @@ export abstract class DomListener {
 			// внутри стрелочной ф-ции, контекст this сохраняется
 			const method: keyof this = getMethodName(listener) as keyof this; // формирование имени метода, из имени события
 			if( !this[method] ) { // проверяем, что для события с именем method в классе,
-				//					                 // нет метода, обработчик такого события, выводим ошибку
+				//									// нет метода, обработчик такого события, выводим ошибку
 				const name = this.name || ''; // имя элемента(компоненты), если было указано в конструкторе, при создании
 				throw new Error(`Method ${method as string} is not implemented in ${name} Component`);
 			}

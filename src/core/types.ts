@@ -2,13 +2,11 @@ import {DomInstance} from './dom';
 import {Emitter} from './Emitter';
 import {ExcelComponent} from './ExcelComponent';
 
+export type Style = {[key: string]: string}
+
 export type ReduxGetState = () => State;
-
 export type ReduxDispatch = (action: Action) => void;
-
-// export type ReduxSubscribe = ( fn: (args: Array<any>) => void ) => ReduxUnSubscribe;
 export type ReduxSubscribe = ( fn: (state: State) => void ) => ReduxUnSubscribe;
-
 export type ReduxUnSubscribe = {
 	unsubscribe: ()=>void;
 };
@@ -19,31 +17,27 @@ export type Store = {
 	subscribe: ReduxSubscribe;
 }
 
-// export type Store = {
-// 	getState: () => State;
-// 	dispatch: (action: Action) => void;
-// 	subscribe: (fn: (...args: Array<any>) => void) => {unsubscribe: ()=>void};
-// }
-
-export type ActionData = ActionDataResize | ActionDataChangeText;
+export type ActionData = ActionDataResize | ActionDataChangeText | ActionDataCellsData | ActionDataApplyStyle;
 export type ActionDataResize = {resizerType: string, id: string, value: number};
 export type ActionDataChangeText = {id: string, value: string};
 export type ActionDataCellsData = {[key: string]: string};
+export type ActionDataApplyStyle = {value: Partial<ToolbarState>, ids: string[]};
 
 
-// export type ColState = {[id: string]: number};
-// export type RowState = {[id: string]: number};
 export type ColsOrRowState = {[id: string]: number};
+export type ApplyStyle = {[key: string]: ToolbarState}
 export type State = {
 	colState: ColsOrRowState;
 	rowState: ColsOrRowState;
 	cellsDataState: ActionDataCellsData,
+	stylesState: ApplyStyle,
 	currentText: string,
+	currentStyles: ToolbarState,
 };
+export type ReducerData = ColsOrRowState | ActionDataCellsData | ApplyStyle;
+export type StatePropertyValue = ColsOrRowState | ColsOrRowState | ActionDataCellsData | string | ApplyStyle;
 
-export type StatePropertyValue = ColsOrRowState | ColsOrRowState | ActionDataCellsData | string;
-
-export type StateProperty<T, K extends keyof T> = {K: T[K]};
+// export type StateProperty<T, K extends keyof T> = {K: T[K]};
 
 export type Action = {
 	type: ActionType
@@ -78,8 +72,22 @@ export interface cellId {
 	col: number
 }
 
-export type Events = 'table:select' | 'table:input' | 'formula:input' | 'formula:done';
-export type EventHandler = ((text: string) => void) | (() => void) | (($cell: DomInstance) => void);
+export type Events = 'table:select' | 'table:input' | 'formula:input' | 'formula:done' | 'toolbar: applyStyle';
+export type EventHandler = ((text: string) => void) | (() => void) | (($cell: DomInstance) => void) | ((value: Partial<ToolbarState>) => void);
+
+export type ButtonConfig = {
+	icon: string;
+	active: boolean;
+	value: Partial<ToolbarState>;
+};
+
+export type ToolbarState = {
+	textAlign: 'left' | 'center' | 'right',
+	fontWeight: 'normal' | 'bold',
+	fontStyle: 'normal' | 'italic',
+	textDecoration: 'none' | 'underline'
+};
+
 
 // type EventZeroParams = 'formula:done';
 // type EventOneParams = 'table:select' | 'table:input' | 'formula:input';

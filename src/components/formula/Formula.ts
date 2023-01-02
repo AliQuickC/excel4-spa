@@ -1,6 +1,6 @@
 import {ExcelComponent} from '../../core/ExcelComponent';
 import {$, DomInstance} from '../../core/dom';
-import {ExcelComponentOptions, State, StatePropertyValue} from '../../core/types';
+import {ExcelComponentOptions, State} from '../../core/types';
 
 export class Formula extends ExcelComponent {
 	static className = 'excel__formula';
@@ -21,8 +21,8 @@ export class Formula extends ExcelComponent {
 		this.$formula = this.$root.find('#formula');
 
 		this.$on('table:select', ($cell: DomInstance): void => { // добавить обработчик события
-			//               // при выборе ячейки в таблице, показываем в формуле данные,
-			this.$formula.text($cell.text()); //  из дата атрибута ячейки
+			//												// при выборе ячейки в таблице, показываем в формуле данные,
+			this.$formula.text($cell.text()); // из дата атрибута ячейки
 		});
 	}
 
@@ -32,10 +32,10 @@ export class Formula extends ExcelComponent {
 	public toHTML(): string {
 		return `
 			<div class="info">fx</div>
-			<div class="input" id="formula"  contenteditable spellcheck="false"></div>`;
+			<div class="input" id="formula" contenteditable spellcheck="false"></div>`;
 	}
 
-	public storeChanged({currentText: currentText}: Partial<State>): void {
+	public storeChanged({currentText}: Partial<State>): void {
 		this.$formula.text(currentText as string);
 		console.log('FormulaChanges: ', currentText);
 	}

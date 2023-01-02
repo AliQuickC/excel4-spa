@@ -1,4 +1,4 @@
-import { ActionDataChangeText, ActionDataResize, ActionType } from '../core/types';
+import { ActionDataApplyStyle, ActionDataChangeText, ActionDataResize, ActionType, Style, ToolbarState } from '../core/types';
 
 // Action Creators
 export function tableResize(data: ActionDataResize): {type: ActionType, data: ActionDataResize} {
@@ -15,7 +15,7 @@ export function changeText(data: ActionDataChangeText): {type: ActionType, data:
 	};
 }
 
-export function changeStyles<T>(data: T): {type: ActionType, data: T} {
+export function changeStyles(data: ToolbarState): {type: ActionType, data: ToolbarState} {
 	return {
 		type: ActionType.ChangeStyles,
 		data
@@ -23,7 +23,7 @@ export function changeStyles<T>(data: T): {type: ActionType, data: T} {
 }
 
 // value, ids
-export function applyStyle<T>(data: T): {type: ActionType, data: T} {
+export function applyStyle(data: ActionDataApplyStyle): {type: ActionType, data: ActionDataApplyStyle} {
 	return {
 		type: ActionType.ApplyStyle,
 		data
