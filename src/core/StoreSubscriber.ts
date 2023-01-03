@@ -10,7 +10,7 @@ export class StoreSubscriber {
 		this.store = store;
 	}
 
-	subscribeComponents(components: Instance[]): void { // подписка на изменение state, в компонентах components
+	public subscribeComponents(components: Instance[]): void { // подписка на изменение state, в компонентах components
 		this.prevState = this.store.getState(); // копия state
 
 		this.sub = this.store.subscribe(state => { // добавляем подписку на изменение state
@@ -31,7 +31,7 @@ export class StoreSubscriber {
 		});
 	}
 
-	unsubscribeFromStore(): void {
+	public unsubscribeFromStore(): void {
 		this.sub?.unsubscribe();
 	}
 }

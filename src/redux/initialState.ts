@@ -1,8 +1,9 @@
-import { defaultStyles } from '../constants';
+import { defaultStyles, defaultTitle } from '../constants';
 import { State } from '../core/types';
 import { storage } from '../core/utils';
 
 const defaultState = {
+	title: defaultTitle,
 	rowState: {},
 	colState: {},
 	cellsDataState: {},

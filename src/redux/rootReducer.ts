@@ -28,6 +28,8 @@ export function rootReducer(state: State, action: Action): State {
 			[field]: val,
 			currentStyles: {...state.currentStyles, ...(<ActionDataApplyStyle>action.data).value}
 		};
+	case ActionType.ChangeTitle:
+		return {...state, title: action.data as string};
 	default:
 		return state;
 	}

@@ -30,7 +30,7 @@ export function applyStyle(data: ActionDataApplyStyle): {type: ActionType, data:
 	};
 }
 
-export function changeTitle<T>(data: T): {type: ActionType, data: T} {
+export function changeTitle(data: string): {type: ActionType, data: string} {
 	return {
 		type: ActionType.ChangeTitle,
 		data

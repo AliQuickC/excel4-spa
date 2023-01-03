@@ -17,7 +17,7 @@ export type Store = {
 	subscribe: ReduxSubscribe;
 }
 
-export type ActionData = ActionDataResize | ActionDataChangeText | ActionDataCellsData | ActionDataApplyStyle;
+export type ActionData = ActionDataResize | ActionDataChangeText | ActionDataCellsData | ActionDataApplyStyle | string;
 export type ActionDataResize = {resizerType: string, id: string, value: number};
 export type ActionDataChangeText = {id: string, value: string};
 export type ActionDataCellsData = {[key: string]: string};
@@ -27,6 +27,7 @@ export type ActionDataApplyStyle = {value: Partial<ToolbarState>, ids: string[]}
 export type ColsOrRowState = {[id: string]: number};
 export type ApplyStyle = {[key: string]: ToolbarState}
 export type State = {
+	title: string,
 	colState: ColsOrRowState;
 	rowState: ColsOrRowState;
 	cellsDataState: ActionDataCellsData,

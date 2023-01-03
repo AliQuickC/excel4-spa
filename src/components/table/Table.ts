@@ -117,7 +117,7 @@ export class Table extends ExcelComponent {
 		}
 	}
 
-	updateTextInStore(value: string) { // обновление данных в state
+	private updateTextInStore(value: string) { // обновление данных в state
 		this.$dispatch(actions.changeText({ // сработка события, изменение state,
 			//																		// меняет currentText и dataState в state(rootReducer)
 			//																		// для компонент подписанных на изменение state(subscribeComponents),
@@ -127,11 +127,11 @@ export class Table extends ExcelComponent {
 		}));
 	}
 
-	storeChanged(changes: Partial<State>): void {
+	public storeChanged(changes: Partial<State>): void {
 		console.log('TableChanges: ', changes);
 	}
 
-	onInput(event: KeyboardEvent): void {
+	private onInput(event: KeyboardEvent): void {
 		// this.$emit('table:input', $(<HTMLElement>event.target));
 		this.updateTextInStore($(event.target as HTMLElement).text());	// обновление данных в state
 		//																															// обновление данных в формуле
