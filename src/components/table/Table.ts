@@ -128,7 +128,7 @@ export class Table extends ExcelComponent {
 	}
 
 	public storeChanged(changes: Partial<State>): void {
-		console.log('TableChanges: ', changes);
+		console.log('Table Changes: ', changes);
 	}
 
 	private onInput(event: KeyboardEvent): void {

@@ -22,7 +22,6 @@ export function changeStyles(data: ToolbarState): {type: ActionType, data: Toolb
 	};
 }
 
-// value, ids
 export function applyStyle(data: ActionDataApplyStyle): {type: ActionType, data: ActionDataApplyStyle} {
 	return {
 		type: ActionType.ApplyStyle,

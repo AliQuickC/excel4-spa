@@ -43,3 +43,22 @@ export function camelToDasheCase(str: string): string {
 	return str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
 }
 
+type debounceCallback<T> = (args: T)=>void;
+export function debounce<T>(fn: debounceCallback<T>, wait: number): (args: T)=>void {	// вызов fn не более одного раза в wait
+	// блокирует вызов ф-ции fn, если появился новый вызов fn
+	let timeout: NodeJS.Timeout; // в замыкании
+	return function(args: T): void {
+		const later = () => {
+			clearTimeout(timeout);
+			// fn.apply(this, [args]);
+			fn(args);
+		};
+
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+	};
+}
+
+export function clone<T extends object>(obj: T): T { // клонируем объект
+	return JSON.parse(JSON.stringify(obj));
+}

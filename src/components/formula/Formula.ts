@@ -37,7 +37,7 @@ export class Formula extends ExcelComponent {
 
 	public storeChanged({currentText}: Partial<State>): void {
 		this.$formula.text(currentText as string);
-		console.log('FormulaChanges: ', currentText);
+		console.log('Formula Changes: ', currentText);
 	}
 
 	protected onInput(event: InputEvent): void {

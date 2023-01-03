@@ -3,6 +3,7 @@ import { ExcelComponentOptions, State } from '../../core/types';
 import { $, DomInstance } from '../../core/dom';
 import { changeTitle } from '../../redux/actions';
 import { defaultTitle } from '../../constants';
+import { debounce } from '../../core/utils';
 
 export class Header extends ExcelComponent {
 	static className = 'excel__header';
@@ -16,6 +17,7 @@ export class Header extends ExcelComponent {
 	}
 
 	public prepare() { // запускается в конструкторе родительского класса
+		this.onInput = debounce(this.onInput, 500); // блокируем вызов ф-ции, если появился новый вызов этой ф-ции
 	}
 
 	public toHTML(): string {
@@ -33,11 +35,11 @@ export class Header extends ExcelComponent {
 	}
 
 	public storeChanged(changes: Partial<State>): void {
-		console.log('changes: ', changes);
+		console.log('Header changes: ', changes);
 	}
 
-	private onInput(event: Event) {
+	private onInput = (event: Event): void => {
 		const $target = $(event.target as HTMLElement);
 		this.$dispatch(changeTitle($target.text()));
-	}
+	};
 }
