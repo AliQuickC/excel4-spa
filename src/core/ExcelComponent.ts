@@ -27,6 +27,9 @@ export abstract class ExcelComponent extends DomListener {
 	// настраивает компонент до init()
 	abstract prepare(): void;
 
+	// Сюда приходят изменения только по тем полям, на которые мы подписались
+	abstract storeChanged(changes: Partial<State>): void;
+
 	// вызов события
 	protected $emit(event: Events, ...args: Array<any>): void {
 		this.emitter.emit(event, ...args);
@@ -42,10 +45,6 @@ export abstract class ExcelComponent extends DomListener {
 		this.store.dispatch(action);
 	}
 
-	// Сюда приходят изменения только по тем полям, на которые мы подписались
-	abstract storeChanged(changes: Partial<State>): void;
-
-
 	// при изменение state, проверяем наличие подписки в this.subscribe, у компоненты для ключа key
 	public isWatching(key: string): boolean {
 		return this.subscribe.includes(key);
@@ -60,7 +59,7 @@ export abstract class ExcelComponent extends DomListener {
 	// удаляет слушателей
 	// удаляет коммпонент
 	public destroy(): void {
-		this.offComponentEvents(); // удаление событий для DOM элемента
-		this.unsubscribers.forEach(unsub => unsub()); // удаление подписок на события
+		this.offComponentEvents();										// удаление событий для DOM элемента
+		this.unsubscribers.forEach(unsub => unsub());	// удаление подписок на события
 	}
 }

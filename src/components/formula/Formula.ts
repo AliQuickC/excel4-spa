@@ -20,9 +20,9 @@ export class Formula extends ExcelComponent {
 
 		this.$formula = this.$root.find('#formula');
 
-		this.$on('table:select', ($cell: DomInstance): void => { // добавить обработчик события
+		this.$on('table:select', ($cell: DomInstance): void => {	// добавить обработчик события
 			//												// при выборе ячейки в таблице, показываем в формуле данные,
-			this.$formula.text($cell.text()); // из дата атрибута ячейки
+			this.$formula.text($cell.data.value || '');							// из дата атрибута ячейки
 		});
 	}
 
@@ -42,14 +42,14 @@ export class Formula extends ExcelComponent {
 
 	protected onInput(event: InputEvent): void {
 		this.$emit('formula:input', $(<HTMLElement>event.target).text());	// вызов события, при вводе в формулу,
-		//																											// дублирует данные в ячейку таблици, обновляет state
+		//																								// дублирует данные в ячейку таблици, обновляет state
 	}
 
 	protected onKeydown(event: KeyboardEvent) {
 		const keys = ['Enter', 'Tab'];
 		if (keys.includes(event.key)) {
 			event.preventDefault();
-			this.$emit('formula:done'); // вызов события
+			this.$emit('formula:done');	// вызов события
 		}
 	}
 }

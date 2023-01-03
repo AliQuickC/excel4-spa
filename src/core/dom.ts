@@ -27,8 +27,8 @@ class Dom {
 			this.$el.textContent = text;			// меняем свойство textContent (текстовое содержимое элемента)
 			return this;
 		}
-		if (this.$el.tagName.toLowerCase() === 'input') { // если элемент типа input
-			return (<HTMLInputElement>this.$el).value.trim(); //							// меняем свойство value
+		if (this.$el.tagName.toLowerCase() === 'input') {		// если элемент типа input
+			return (<HTMLInputElement>this.$el).value.trim();	// меняем свойство value
 		}
 		return (this.$el.textContent as keyof Node).trim();
 	}
@@ -48,9 +48,9 @@ class Dom {
 	}
 
 	public append(node: HTMLElement | DomInstance): DomInstance {
-		if (node instanceof Dom) { // если node является инстанцом класса Dom,
-			node = node.$el; // node присваиваем Dom элемент,
-		} // иначе предполагается что node это нативный элемент
+		if (node instanceof Dom) {	// если node является инстанцом класса Dom,
+			node = node.$el;					// node присваиваем Dom элемент,
+		}														// иначе предполагается что node это нативный элемент
 
 		if (!Element.prototype.append) { // полифил, помещает DOM элемент в документ
 			this.$el.appendChild(node);
@@ -86,23 +86,33 @@ class Dom {
 			.forEach((key) => (<T>(this.$el.style))[key as keyof T] = (styles)[key] as T[keyof T]);
 	}
 
-	public id(): string;
-	public id(parse: unknown): cellId;
+	public id(): string; 								// геттер
+	public id(parse: unknown): cellId;	// сеттер
 	public id(parse?: unknown): string | cellId {
-		if (parse) { // если true, возвращаем объект с координатами ячейки
+		if (parse) {				// если true, возвращаем объект с координатами ячейки
 			const parsed = (<string>this.id()).split(':'); // разбираем строку на массив
-			return { // объект с координатами ячейки
+			return {					// объект с координатами ячейки
 				row: +parsed[0],
 				col: +parsed[1]
 			};
 		}
-		// data - геттер
+		// data - геттер класса Dom
 		return this.data.id as string; // считываем и возвращаем, дата атрибут data-id
 	}
 
-	public focus(): DomInstance { // фокус на элемент при выделении
-		this.$el.focus(); // фокус ввода на элемент
+	public focus(): DomInstance {	// фокус на элемент при выделении
+		this.$el.focus();						// фокус ввода на элемент
 		return this;
+	}
+
+	attr(name: string): string | null;							// геттер
+	attr(name: string, value: string): DomInstance;	// сеттер
+	attr(name: string, value?: string): DomInstance | string | null { // считывает/меняет атрибут name
+		if (value) {
+			this.$el.setAttribute(name, value);
+			return this;
+		}
+		return this.$el.getAttribute(name);
 	}
 
 	public addClass(className: string): DomInstance {

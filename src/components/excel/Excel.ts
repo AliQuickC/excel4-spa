@@ -39,7 +39,8 @@ export class Excel {
 	public render(): void {
 		this.$parentEl.append(this.getRoot());
 
-		this.subscriber.subscribeComponents(this.components as Instance[]); // !!!
+		this.subscriber.subscribeComponents(this.components as Instance[]); // проверка, какое свойство state изменилось,
+		// если компонент подписан на изменение, этого свойства объекта state, срабатывает storeChanged() внутри компонента
 
 		this.components.forEach(component => (<Instance>component).init());
 	}

@@ -38,8 +38,6 @@ export type State = {
 export type ReducerData = ColsOrRowState | ActionDataCellsData | ApplyStyle;
 export type StatePropertyValue = ColsOrRowState | ColsOrRowState | ActionDataCellsData | string | ApplyStyle;
 
-// export type StateProperty<T, K extends keyof T> = {K: T[K]};
-
 export type Action = {
 	type: ActionType
 	data?: ActionData
@@ -88,7 +86,6 @@ export type ToolbarState = {
 	fontStyle: 'normal' | 'italic',
 	textDecoration: 'none' | 'underline'
 };
-
 
 // type EventZeroParams = 'formula:done';
 // type EventOneParams = 'table:select' | 'table:input' | 'formula:input';

@@ -19,9 +19,9 @@ function toButton(button: ButtonConfig): string {
 export function createToolbar(s: ToolbarState) { // вывод верстки тулбара с кнопками
 	const buttons: ButtonConfig[] = [
 		{
-			icon: 'format_align_left', //			// значение тега, задает символ иконочного шрифта
-			active: s['textAlign'] === 'left', // переключение активности кнопки, активна/неактивна
-			value: {textAlign: 'left'} //			// css свойство, записывается в data атрибут кнопки
+			icon: 'format_align_left', //				// значение тега, задает символ иконочного шрифта
+			active: s['textAlign'] === 'left',	// переключение активности кнопки, активна/неактивна
+			value: {textAlign: 'left'} //				// css свойство, записывается в data атрибут кнопки
 		},
 		{
 			icon: 'format_align_center',

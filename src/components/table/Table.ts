@@ -7,6 +7,7 @@ import {TableSelection} from './TableSelection';
 import {ActionDataResize, ExcelComponentOptions, State, ToolbarState} from '../../core/types';
 import * as actions from '../../redux/actions';
 import { defaultStyles } from '../../constants';
+import { parse } from '../../core/parse';
 
 export class Table extends ExcelComponent {
 	static readonly className = 'excel__table';
@@ -35,9 +36,11 @@ export class Table extends ExcelComponent {
 		// ищет ячейку в DOM элементе excel__table, this.$root - объект класса Dom
 		this.selectCell(this.$root.find('[data-id="0:0"]')); // делаем DOM ячейку выбранной, при открытии документа
 
-		this.$on('formula:input', (text: string): void => {
-			this.selection.current.text(text); // !!! меняем не из store
-			this.updateTextInStore(text);
+		this.$on('formula:input', (value: string): void => {
+			this.selection.current
+				.attr('data-value', value)	// присвоить значение дата атрибуту выбранной ячейки
+				.text(parse(value));				// !!! меняем не из state
+			this.updateTextInStore(value);
 		});
 
 		this.$on('formula:done', (): void => { // добавить обработчик события, если в формуле Enter или Tab
@@ -45,8 +48,8 @@ export class Table extends ExcelComponent {
 		});
 
 		this.$on('toolbar: applyStyle', (value: Partial<ToolbarState>): void => { // добавляет обработчик события,
-			//																								// изменение стиля в тулбаре, кнопками
-			this.selection.applyStyle(value); //							// применить стиль, из объекта value, к выделенным ячейкам
+			//																	// изменение стиля в тулбаре, кнопками
+			this.selection.applyStyle(value);		// применить стиль, из объекта value, к выделенным ячейкам
 			this.$dispatch(actions.applyStyle({ // стили, для выделенных ячеек, сохранить в state
 				value, //													// стиль который нужно применить к ячейкам
 				ids: this.selection.selectedIds 	// массив объектов, c id выделенных ячеек
@@ -56,9 +59,9 @@ export class Table extends ExcelComponent {
 
 	// выбор ячейки DOM
 	private selectCell($cell:DomInstance): void {
-		(this.selection).select($cell); // делаем ячейку выбранной, $cell - объект класса Dom
+		(this.selection).select($cell);			// делаем ячейку выбранной, $cell - объект класса Dom
 
-		this.$emit('table:select', $cell); // вызов события, выбор ячейки, при выборе ячейки в таблице,
+		this.$emit('table:select', $cell);	// вызов события, выбор ячейки, при выборе ячейки в таблице,
 		//	дублировать значение, в формуле содержимое ячейки, в кнопках тулбара состояние стилей.
 
 		const styles = $cell.getStyles(Object.keys(defaultStyles)); // считываем стили у выбранной ячейки, в объект
@@ -66,9 +69,9 @@ export class Table extends ExcelComponent {
 
 		// сработка события, изменение state, в state.currentStyles сохраняем стили выделенной ячейки
 		this.$dispatch(actions.changeStyles(styles as ToolbarState));	// передаем объект со стилями styles,
-		//																						// меняем свйство currentStyles в state(rootReducer)
-		//																						// для компонент подписанных на изменение state(subscribeComponents),
-		//																						// storeChanged() Отображаем в соответствии с новым state
+		//																				// меняем свйство currentStyles в state(rootReducer)
+		//																				// для компонент подписанных на изменение state(subscribeComponents),
+		//																				// storeChanged() Отображаем в соответствии с новым state
 	}
 
 	async resizeTable(event: MouseEvent) {
@@ -93,8 +96,6 @@ export class Table extends ExcelComponent {
 					//																								// которые были выделены
 				this.selection.selectGroup($cells); // выделение гуппы ячеек
 			} else {
-				// this.selection.select($target);
-				// this.$emit('table:input', $(<HTMLElement>event.target));
 				this.selectCell($target);
 			}
 		}
@@ -132,7 +133,6 @@ export class Table extends ExcelComponent {
 	}
 
 	private onInput(event: KeyboardEvent): void {
-		// this.$emit('table:input', $(<HTMLElement>event.target));
 		this.updateTextInStore($(event.target as HTMLElement).text());	// обновление данных в state
 		//																															// обновление данных в формуле
 	}

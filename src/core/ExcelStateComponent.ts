@@ -15,12 +15,11 @@ export abstract class ExcelStateComponent extends ExcelComponent {
 		return JSON.stringify(this.state, null, 2);
 	}
 
-	initState(initialState = {} as ToolbarState) { // инициализируем локальный state
+	initState(initialState = {} as ToolbarState) {	// инициализируем локальный state
 		this.state = {...initialState};
 	}
-
-	setState(newState: ToolbarState) { // изменяем локальный state, обновляем отображение элемента
-		this.state = {...this.state, ...newState}; // меняет локальный state
-		this.$root.html(this.template); // обновляет отображение тулбара из локального state
+	setState(newState: ToolbarState) {							// изменяем локальный state, обновляем отображение элемента
+		this.state = {...this.state, ...newState};		// меняет локальный state
+		this.$root.html(this.template);								// обновляет отображение тулбара из локального state
 	}
 }

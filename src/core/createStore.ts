@@ -13,12 +13,12 @@ export function createStore(rootReducer: (state: State, action: Action) => State
 				}
 			};
 		},
-		dispatch: function(action: Action): void { // изменяет state + сработка события, изменение state
-			state = rootReducer(state, action); // редюсер, меняет state
-			listeners.forEach(listener => listener(state)); // сработка события на изменение state
+		dispatch: function(action: Action): void {				// изменяет state + сработка события, изменение state
+			state = rootReducer(state, action);							// редюсер, меняет state
+			listeners.forEach(listener => listener(state));	// сработка события на изменение state
 		},
 		getState: function() {
-			return JSON.parse(JSON.stringify(state)); // клонируем объект, для избежания мутации
+			return JSON.parse(JSON.stringify(state));				// клонируем объект, для избежания мутации
 		}
 	};
 }

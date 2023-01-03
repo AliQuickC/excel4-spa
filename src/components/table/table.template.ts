@@ -23,16 +23,17 @@ function toCell(state: State, row: number) {
 	return function (_: unknown, col: number) {
 		const id = `${row}:${col}`;
 		const width = getWidth(state.colState, col.toString() as keyof State); // ширина столбца + px
-		const data = state.cellsDataState[id]; // содержимое ячейки
-		const styles = toInlineStyles({ // строка со всеми стилями ячейки
-			...defaultStyles, // объект с дефолтными стилями,
-			...state.stylesState[id]}); // объект со стилями, для которых есть значеня в state
+		const data = state.cellsDataState[id];	// содержимое ячейки
+		const styles = toInlineStyles({					// строка со всеми стилями ячейки
+			...defaultStyles,											// объект с дефолтными стилями,
+			...state.stylesState[id]});						// объект со стилями, для которых есть значеня в state
 		return	`<div
 							class="cell"
 							contenteditable
+							data-col="${col}"
 							data-type="cell"
 							data-id=${id}
-							data-col="${col}"
+							data-value="${data || ''}"
 							style="${styles}; width: ${width}"
 						>${parse(data) || ''}</div>`;
 	};
@@ -77,13 +78,13 @@ export function createTable(rowsCount = 15, state: State = {} as State): string 
 
 	// формируем ячейки для верхней строки, с буквами столбцов
 	const cols = new Array(colsCount)
-		.fill('') // массив пустых строк, для каждой ячейки
-		.map(toChar) // преобразование кодов символов в символы, заполнение массива символами
+		.fill('')				// массив пустых строк, для каждой ячейки
+		.map(toChar)		// преобразование кодов символов в символы, заполнение массива символами
 		.map(widthWidthFrom(state)) // в map подставляется сформированая ф-ция
 		// после ф-ция, формирует объект(массив объектов) с параметрами, для отрисовки колонки
-		.map(toColumn) // для каждого элемента массива(заголовка столбца) формируем верстку ячейки
+		.map(toColumn)	// для каждого элемента массива(заголовка столбца) формируем верстку ячейки
 		// для каждого элемента массива(заголовка столбца) формируем верстку ячейки
-		.join('');	// склеиваем верстку всех ячеек в одну строку
+		.join('');			// склеиваем верстку всех ячеек в одну строку
 
 	rows.push(createRow(null, cols, {}));
 

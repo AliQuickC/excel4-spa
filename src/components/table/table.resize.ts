@@ -25,15 +25,15 @@ export function resizeHandler($root: DomInstance, event: Event) { // обраб�
 			}
 		};
 
-		document.onmouseup = () => { // фиксируем новый размер столбца/строки
+		document.onmouseup = () => {		// фиксируем новый размер столбца/строки
 			document.onmousemove = null;
 			document.onmouseup = null;
 			value = Math.round(value);
-			if (resizerType === 'col') { // если тянем колонку
+			if (resizerType === 'col') {	// если тянем колонку
 				$parent.css({width: value + 'px'});
 				$root.findAll(`[data-col='${$parent.data.col}']`)
 					.forEach((el: Node): string => (<HTMLDivElement>el).style.width = value + 'px');
-			} else {	// если тянем строку
+			} else {											// если тянем строку
 				$parent.css({height: value + 'px'});
 			}
 

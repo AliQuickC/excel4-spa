@@ -12,17 +12,17 @@ export class Toolbar extends ExcelStateComponent {
 		super($root, {
 			name: 'Toolbar',
 			listeners: ['click'],
-			subscribe: ['currentStyles'], // подписка на изменение state
+			subscribe: ['currentStyles'],		// подписка на изменение state
 			...options
 		});
 	}
 
 	public prepare() {
-		this.initState(defaultStyles); // инициализируем локальный state
+		this.initState(defaultStyles);		// инициализируем локальный state
 	}
 
-	get template(): string { // формирует HTML код для вывода
-		return createToolbar(this.state); // отрисовка тулбара из локального state
+	get template(): string {						// формирует HTML код для вывода
+		return createToolbar(this.state);	// отрисовка тулбара из локального state
 	}
 
 	public toHTML(): string {
@@ -36,10 +36,10 @@ export class Toolbar extends ExcelStateComponent {
 
 	protected onClick(event: Event): void {
 		const $target = $(event.target as HTMLElement);
-		if ($target.data.type === 'button') { // если data-type === "button"
+		if ($target.data.type === 'button') {				// если data-type === "button"
 			const value: Partial<ToolbarState> = JSON.parse($target.data.value as string); // data-value хранит css свойство, за которое отвечает кнопка,
-			//																						// считываем его, преобразуем в объект
-			this.$emit('toolbar: applyStyle', value); // сработка события, изменить стиль в таблице
+			//																				// считываем его, преобразуем в объект
+			this.$emit('toolbar: applyStyle', value);	// сработка события, изменить стиль в таблице
 		}
 	}
 }

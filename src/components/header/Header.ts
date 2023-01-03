@@ -16,8 +16,8 @@ export class Header extends ExcelComponent {
 		});
 	}
 
-	public prepare() { // запускается в конструкторе родительского класса
-		this.onInput = debounce(this.onInput, 500); // блокируем вызов ф-ции, если появился новый вызов этой ф-ции
+	public prepare() {														// запускается в конструкторе родительского класса
+		this.onInput = debounce(this.onInput, 500);	// блокируем вызов ф-ции, если появился новый вызов этой ф-ции
 	}
 
 	public toHTML(): string {
