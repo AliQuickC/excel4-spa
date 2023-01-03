@@ -1,4 +1,5 @@
 import {DomInstance} from '../../core/dom';
+import { Style } from '../../core/types';
 
 export class TableSelection {
 	static className = 'selected';
@@ -21,10 +22,18 @@ export class TableSelection {
 		this.group = [];
 	}
 
+	get selectedIds(): string[] { // возвращает массив c id, выделенных ячеек
+		return this.group.map($el => $el.id());
+	}
+
 	selectGroup($group: DomInstance[] = []): void { // выделить группу ячеек
 		this.clear();
 
 		this.group = $group;
 		this.group.forEach($el => $el.addClass(TableSelection.className));
+	}
+
+	applyStyle(style: Style) { // применяет стили из объекта style, для выделенных ячееек this.group
+		this.group.forEach($el => $el.css(style));
 	}
 }

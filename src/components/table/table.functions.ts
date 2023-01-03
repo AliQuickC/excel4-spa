@@ -11,19 +11,19 @@ export function isCell(event: Event): boolean {
 }
 
 export function matrix($target: DomInstance, $current: DomInstance): string[] {
-	const target = $target.id(true) as cellId; // объект с координатами ячейки, выбранной нажатием
-	const current = $current.id(true) as cellId; // объект с координатами ячейки, которая уже была выбрана
+	const target = $target.id(true) as cellId;		// объект с координатами ячейки, выбранной нажатием
+	const current = $current.id(true) as cellId;	// объект с координатами ячейки, которая уже была выбрана
 
-	const cols: number[] = range(current.col, target.col); // массив номеров, диапазон выбранных колонок
-	const rows: number[] = range(current.row, target.row); // массив номеров, диапазон выбранных строк
+	const cols: number[] = range(current.col, target.col);	// массив номеров, диапазон выбранных колонок
+	const rows: number[] = range(current.row, target.row);	// массив номеров, диапазон выбранных строк
 
-	return rows.reduce((acc, row) => { // возвращает массив строк, список всех выбранных ячеек
+	return rows.reduce((acc, row) => {	// возвращает массив строк, список всех выбранных ячеек
 		cols.forEach(col => acc.push(`${row}:${col}`));
 		return acc;
 	}, [] as string[]);
 }
 
-export function nextSelector(key: string, {col, row}: cellId) { // определяет ячейку для перемещения после нажатия
+export function nextSelector(key: string, {col, row}: cellId) {	// определяет ячейку для перемещения после нажатия
 	const MIN_VALUE = 0;
 	switch (key) {
 	case 'Enter':

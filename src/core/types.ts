@@ -2,7 +2,58 @@ import {DomInstance} from './dom';
 import {Emitter} from './Emitter';
 import {ExcelComponent} from './ExcelComponent';
 
-export type ExcelComponentOptions = {name?: string, listeners?: Array<string>, emitter: Emitter,};
+export type Style = {[key: string]: string}
+
+export type ReduxGetState = () => State;
+export type ReduxDispatch = (action: Action) => void;
+export type ReduxSubscribe = ( fn: (state: State) => void ) => ReduxUnSubscribe;
+export type ReduxUnSubscribe = {
+	unsubscribe: ()=>void;
+};
+
+export type Store = {
+	getState: ReduxGetState;
+	dispatch: ReduxDispatch;
+	subscribe: ReduxSubscribe;
+}
+
+export type ActionData = ActionDataResize | ActionDataChangeText | ActionDataCellsData | ActionDataApplyStyle | string;
+export type ActionDataResize = {resizerType: string, id: string, value: number};
+export type ActionDataChangeText = {id: string, value: string};
+export type ActionDataCellsData = {[key: string]: string};
+export type ActionDataApplyStyle = {value: Partial<ToolbarState>, ids: string[]};
+
+
+export type ColsOrRowState = {[id: string]: number};
+export type ApplyStyle = {[key: string]: ToolbarState}
+export type State = {
+	title: string,
+	colState: ColsOrRowState;
+	rowState: ColsOrRowState;
+	cellsDataState: ActionDataCellsData,
+	stylesState: ApplyStyle,
+	currentText: string,
+	currentStyles: ToolbarState,
+};
+export type ReducerData = ColsOrRowState | ActionDataCellsData | ApplyStyle;
+export type StatePropertyValue = ColsOrRowState | ColsOrRowState | ActionDataCellsData | string | ApplyStyle;
+
+export type Action = {
+	type: ActionType
+	data?: ActionData
+}
+
+export enum ActionType {
+	Init = '__INIT__',
+	TableResize = 'TABLE_RESIZE',
+	ChangeText = 'CHANGE_TEXT',
+	ApplyStyle = 'APPLY_STYLE',
+	ChangeStyles = 'CHANGE_STYLES',
+	ChangeTitle = 'CHANGE_TITLE',
+	UpdateDate = 'UPDATE_DATE',
+}
+
+export type ExcelComponentOptions = {name?: string, listeners?: Array<string>, subscribe?: Array<string>, emitter: Emitter, store: Store};
 
 export type ComponentClass = {
 	new <T extends ExcelComponent>(element: DomInstance, options: ExcelComponentOptions): T,
@@ -20,8 +71,21 @@ export interface cellId {
 	col: number
 }
 
-export type Events = 'table:select' | 'table:input' | 'formula:input' | 'formula:done';
-export type EventHandler = ((text: string) => void) | (() => void) | (($cell: DomInstance) => void);
+export type Events = 'table:select' | 'table:input' | 'formula:input' | 'formula:done' | 'toolbar: applyStyle';
+export type EventHandler = ((text: string) => void) | (() => void) | (($cell: DomInstance) => void) | ((value: Partial<ToolbarState>) => void);
+
+export type ButtonConfig = {
+	icon: string;
+	active: boolean;
+	value: Partial<ToolbarState>;
+};
+
+export type ToolbarState = {
+	textAlign: 'left' | 'center' | 'right',
+	fontWeight: 'normal' | 'bold',
+	fontStyle: 'normal' | 'italic',
+	textDecoration: 'none' | 'underline'
+};
 
 // type EventZeroParams = 'formula:done';
 // type EventOneParams = 'table:select' | 'table:input' | 'formula:input';

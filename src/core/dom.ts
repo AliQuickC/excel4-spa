@@ -1,6 +1,5 @@
-import {cellId} from './types';
+import {cellId, Style} from './types';
 
-interface Style {[key: string]: string}
 export type DomInstance = InstanceType<typeof Dom>;
 
 class Dom {
@@ -24,12 +23,12 @@ class Dom {
 	public text(): string;
 	public text(text: string): DomInstance;
 	public text(text?: string | undefined): DomInstance | string { // заполняет содержимое элемента текстом
-		if (typeof text !== 'undefined') { // если в элемент введен текст
-			this.$el.textContent = text; //  меняем свойство textContent (текстовое содержимое элемента)
+		if (typeof text !== 'undefined') {	// если в элемент введен текст
+			this.$el.textContent = text;			// меняем свойство textContent (текстовое содержимое элемента)
 			return this;
 		}
-		if (this.$el.tagName.toLowerCase() === 'input') { // если элемент типа input
-			return (<HTMLInputElement>this.$el).value.trim(); //                // меняем свойство value
+		if (this.$el.tagName.toLowerCase() === 'input') {		// если элемент типа input
+			return (<HTMLInputElement>this.$el).value.trim();	// меняем свойство value
 		}
 		return (this.$el.textContent as keyof Node).trim();
 	}
@@ -49,9 +48,9 @@ class Dom {
 	}
 
 	public append(node: HTMLElement | DomInstance): DomInstance {
-		if (node instanceof Dom) { // если node является инстанцом класса Dom,
-			node = node.$el; // node присваиваем Dom элемент,
-		} // иначе предполагается что node это нативный элемент
+		if (node instanceof Dom) {	// если node является инстанцом класса Dom,
+			node = node.$el;					// node присваиваем Dom элемент,
+		}														// иначе предполагается что node это нативный элемент
 
 		if (!Element.prototype.append) { // полифил, помещает DOM элемент в документ
 			this.$el.appendChild(node);
@@ -81,29 +80,39 @@ class Dom {
 		return this.$el.querySelectorAll(selector);
 	}
 
-	public css<T extends CSSStyleDeclaration>(styles: {[key: string]: string}): void { // преобразует стили из объекта в css свойство
+	public css<T extends CSSStyleDeclaration>(styles: Style): void { // преобразует стили из объекта в css свойство
 		Object
 			.keys(styles)
 			.forEach((key) => (<T>(this.$el.style))[key as keyof T] = (styles)[key] as T[keyof T]);
 	}
 
-	public id(): string;
-	public id(parse: unknown): cellId;
+	public id(): string; 								// геттер
+	public id(parse: unknown): cellId;	// сеттер
 	public id(parse?: unknown): string | cellId {
-		if (parse) { // если true, возвращаем объект с координатами ячейки
+		if (parse) {				// если true, возвращаем объект с координатами ячейки
 			const parsed = (<string>this.id()).split(':'); // разбираем строку на массив
-			return { // объект с координатами ячейки
+			return {					// объект с координатами ячейки
 				row: +parsed[0],
 				col: +parsed[1]
 			};
 		}
-		// data - геттер
+		// data - геттер класса Dom
 		return this.data.id as string; // считываем и возвращаем, дата атрибут data-id
 	}
 
-	public focus(): DomInstance { // фокус на элемент при выделении
-		this.$el.focus(); // фокус ввода на элемент
+	public focus(): DomInstance {	// фокус на элемент при выделении
+		this.$el.focus();						// фокус ввода на элемент
 		return this;
+	}
+
+	attr(name: string): string | null;							// геттер
+	attr(name: string, value: string): DomInstance;	// сеттер
+	attr(name: string, value?: string): DomInstance | string | null { // считывает/меняет атрибут name
+		if (value) {
+			this.$el.setAttribute(name, value);
+			return this;
+		}
+		return this.$el.getAttribute(name);
 	}
 
 	public addClass(className: string): DomInstance {
@@ -118,7 +127,7 @@ class Dom {
 
 	public getStyles(styles: Array<string> = []): Style { // считывает css стили DOM элемента, сохраняем в объект
 		// для каждого свойства(элемента массива), считывает css значение
-		return styles.reduce((res: Style, s:  keyof Style) => {
+		return styles.reduce((res: Style, s: keyof Style) => {
 			(res)[s] = ((this.$el.style)[s as keyof CSSStyleDeclaration]) as string; // формируем объект со стилями
 			return res;
 		}, {});
