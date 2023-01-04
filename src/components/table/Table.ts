@@ -38,8 +38,8 @@ export class Table extends ExcelComponent {
 
 		this.$on('formula:input', (value: string): void => {
 			this.selection.current
-				.attr('data-value', value)	// присвоить значение дата атрибуту выбранной ячейки
-				.text(parse(value));				// !!! меняем не из state
+				.attr('data-value', value)	// присвоить значение дата атрибуту выбранной ячейки // !!! данные не из state
+				.text(parse(value));
 			this.updateTextInStore(value);
 		});
 
@@ -49,7 +49,7 @@ export class Table extends ExcelComponent {
 
 		this.$on('toolbar: applyStyle', (value: Partial<ToolbarState>): void => { // добавляет обработчик события,
 			//																	// изменение стиля в тулбаре, кнопками
-			this.selection.applyStyle(value);		// применить стиль, из объекта value, к выделенным ячейкам
+			this.selection.applyStyle(value);		// применить стиль, из объекта value, к выделенным ячейкам // !!! данные не из state
 			this.$dispatch(actions.applyStyle({ // стили, для выделенных ячеек, сохранить в state
 				value, //													// стиль который нужно применить к ячейкам
 				ids: this.selection.selectedIds 	// массив объектов, c id выделенных ячеек
