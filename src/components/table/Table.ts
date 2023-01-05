@@ -128,10 +128,6 @@ export class Table extends ExcelComponent {
 		}));
 	}
 
-	public storeChanged(changes: Partial<State>): void {
-		console.log('Table Changes: ', changes);
-	}
-
 	private onInput(event: KeyboardEvent): void {
 		this.updateTextInStore($(event.target as HTMLElement).text());	// обновление данных в state
 		//																															// обновление данных в формуле

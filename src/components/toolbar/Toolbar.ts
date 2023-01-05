@@ -31,7 +31,6 @@ export class Toolbar extends ExcelStateComponent {
 
 	public storeChanged(changes: Partial<State>): void {
 		this.setState(changes.currentStyles as ToolbarState);
-		console.log('Toolbar changes: ', changes);
 	}
 
 	protected onClick(event: Event): void {

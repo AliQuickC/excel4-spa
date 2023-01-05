@@ -12,7 +12,9 @@ class Dom {
 	}
 
 	// вставляет html в корень DOM элемента, который обернут объектом класса Dom
-	public html(html: string): DomInstance | string {
+	public html(): string;
+	public html(html: string): DomInstance;
+	public html(html?: string): DomInstance | string {
 		if (typeof html === 'string') {
 			this.$el.innerHTML = html;
 			return this;

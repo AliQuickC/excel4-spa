@@ -34,6 +34,7 @@ export type State = {
 	stylesState: ApplyStyle,
 	currentText: string,
 	currentStyles: ToolbarState,
+	openedDate: string,
 };
 export type ReducerData = ColsOrRowState | ActionDataCellsData | ApplyStyle;
 export type StatePropertyValue = ColsOrRowState | ColsOrRowState | ActionDataCellsData | string | ApplyStyle;
@@ -60,11 +61,15 @@ export type ComponentClass = {
 	className: string,
 };
 
+export type Constructable<T> = {
+	new (params: string): T;
+}
+
 type InstanceAddProp = {
 	toHTML: () => string,
 	init: () => void,
 };
-export type Instance = InstanceType<ComponentClass> & InstanceAddProp; // InstanceType - utility
+export type Instance = InstanceType<ComponentClass> & InstanceAddProp;
 
 export interface cellId {
 	row: number,

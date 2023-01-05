@@ -30,6 +30,8 @@ export function rootReducer(state: State, action: Action): State {
 		};
 	case ActionType.ChangeTitle:
 		return {...state, title: action.data as string};
+	case ActionType.UpdateDate:
+		return {...state, openedDate: new Date().toJSON()};
 	default:
 		return state;
 	}

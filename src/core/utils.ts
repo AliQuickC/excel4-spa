@@ -17,11 +17,13 @@ export function range(start: number, end: number): number[] {
 		.map((_: unknown, index: number) => start + index);
 }
 
-export function storage(key: string, data: State | null = null) { // читает/пишет в locale storage
-	if (!data) { //																									// если параметр data не указан
+export function storage(key: string): State;												// читает из Locale Storage
+export function storage(key: string, data: State): void;						// пишет в Locale Storage
+export function storage(key: string, data: State | null = null): State | void { // читает/пишет Locale Storage
+	if (!data) { 																											// если параметр data не указан
 		return JSON.parse(<string>localStorage.getItem(key)); // считываем значение 'excel-state'
-	} //																										// иначе если data есть
-	localStorage.setItem(key, JSON.stringify(data)); // записываем data в local store
+	}																												// иначе если data есть
+	localStorage.setItem(key, JSON.stringify(data));				// записываем data(State) в local store
 }
 
 export function isEqual(a: StatePropertyValue, b: StatePropertyValue): boolean {
