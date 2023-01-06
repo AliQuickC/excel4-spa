@@ -30,7 +30,9 @@ export class ExcelPage extends Page {
 		);													// если данных в local store нет, инициализируем его шаблонным объектом
 
 		const stateListenes = debounce((state: State) => { // блокируем вызов ф-ции, если появился новый вызов этой ф-ции
-			console.log('App State: ', state);
+			if(process.env.NODE_ENV === 'development') {
+				console.log('App State: ', state);
+			}
 			storage(storageName(params), state); // записываем state в local store (params excel:123)
 		}, 500);
 
