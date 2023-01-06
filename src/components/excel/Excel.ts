@@ -2,23 +2,22 @@ import {ComponentClass, Instance, Store} from '../../core/types';
 import {$, DomInstance} from '../../core/dom';
 import {Emitter} from '../../core/Emitter';
 import { StoreSubscriber } from '../../core/StoreSubscriber';
+import { updateDate } from '../../redux/actions';
 
 export class Excel {
-	private $parentEl;
 	private components!: Array<ComponentClass> | Array<Instance>;
 	private emitter: Emitter;
 	private store: Store;
 	private subscriber: StoreSubscriber;
 
-	constructor(selector: string, options: {components: Array<ComponentClass>, store: Store}) {
-		this.$parentEl = $(selector);
+	constructor(options: {components: ComponentClass[], store: Store}) {
 		this.components = options.components || [];
 		this.emitter = new Emitter();
-		this.store = options.store; // store
+		this.store = options.store;
 		this.subscriber = new StoreSubscriber(this.store);
 	}
 
-	private getRoot(): DomInstance {
+	public getRoot(): DomInstance {
 		const $root = $.create('div', 'excel');
 		const componentOptions = {
 			emitter: this.emitter,
@@ -36,8 +35,8 @@ export class Excel {
 		return $root;
 	}
 
-	public render(): void {
-		this.$parentEl.append(this.getRoot());
+	public init(): void {
+		this.store.dispatch(updateDate());
 
 		this.subscriber.subscribeComponents(this.components as Instance[]); // проверка, какое свойство state изменилось,
 		// если компонент подписан на изменение, этого свойства объекта state, срабатывает storeChanged() внутри компонента
@@ -45,7 +44,7 @@ export class Excel {
 		this.components.forEach(component => (<Instance>component).init());
 	}
 
-	private destroy() {
+	public destroy() {
 		this.subscriber.unsubscribeFromStore();
 		(<Array<Instance>>this.components).forEach((component) => component.destroy());
 	}

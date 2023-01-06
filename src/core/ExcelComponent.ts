@@ -28,7 +28,8 @@ export abstract class ExcelComponent extends DomListener {
 	abstract prepare(): void;
 
 	// Сюда приходят изменения только по тем полям, на которые мы подписались
-	abstract storeChanged(changes: Partial<State>): void;
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+	public storeChanged(changes: Partial<State>): void {}
 
 	// вызов события
 	protected $emit(event: Events, ...args: Array<any>): void {

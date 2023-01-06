@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
@@ -5,6 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PostCss =  require('postcss-preset-env');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const webpack = require('webpack');
 
 // в зависимости от режима сборки, добавляет/удаляет хэш к имени файла
 const filename = ext => isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`;
@@ -59,6 +62,9 @@ module.exports = {
 		}),
 		new MiniCssExtractPlugin({ // выносит css из js в отдельный файл
 			filename: filename('css') // имя css файла, куда будут собираться все стили
+		}),
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
 		}),
 		// new ESLintPlugin({ extensions: 'ts' }),
 	],
