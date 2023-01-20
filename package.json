@@ -10,7 +10,9 @@
     "build-prod": "cross-env NODE_ENV=production webpack --mode production",
     "lint": "eslint . --ext .ts",
     "lintfix": "eslint . --ext .ts --fix",
-    "clear": "rd /s /q dist"
+    "clear": "rd /s /q dist",
+		"predeploy": "npm run build-prod",
+		"deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -26,7 +28,7 @@
   "bugs": {
     "url": "https://github.com/AliQuickC/excel4-spa/issues"
   },
-  "homepage": "https://github.com/AliQuickC/excel4-spa#readme",
+  "homepage": "https://github.com/AliQuickC/excel4-spa",
   "private": true,
   "browserslist": "> 0.25%, not dead",
   "devDependencies": {
@@ -52,6 +54,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "gh-pages": "^4.0.0",
     "normalize.css": "^8.0.1"
   }
 }

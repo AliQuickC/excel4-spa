@@ -33,7 +33,7 @@ module.exports = {
 	entry: './index.ts', // точка входа
 	output: {
 		filename: filename('js'), // js файл, куда будут собираться все скрипты
-		path: path.resolve(__dirname, 'dist') // путь по которому будут складываться собранные скрипты
+		path: path.resolve(__dirname, 'build') // путь по которому будут складываться собранные скрипты
 	},
 
 	devtool: isDev ? 'source-map' : false, // добавляет ".map" файлы, в режиме разработки
@@ -47,7 +47,7 @@ module.exports = {
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(),  // чистит папку dist, перед новой сборкой
+		new CleanWebpackPlugin(),  // чистит папку build, перед новой сборкой
 		new HTMLWebpackPlugin({ // обработка HTML
 			template: 'index.html', // шаблон для генерации html файла
 			minify: { // минификация html файлов, если режим сборки 'production'
@@ -55,9 +55,9 @@ module.exports = {
 				collapseWhitespace: isProd // удалить прбелы
 			}
 		}),
-		new CopyPlugin({ // копирует необходимые файлы в dist
+		new CopyPlugin({ // копирует необходимые файлы в build
 			patterns: [
-				{ from: path.resolve(__dirname, 'src/favicon.ico'), to: path.resolve(__dirname, 'dist') }
+				{ from: path.resolve(__dirname, 'src/favicon.ico'), to: path.resolve(__dirname, 'build') }
 			]
 		}),
 		new MiniCssExtractPlugin({ // выносит css из js в отдельный файл
