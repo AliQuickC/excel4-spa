@@ -44,7 +44,7 @@ export class Excel {
 		this.components.forEach(component => (<Instance>component).init());
 	}
 
-	public destroy() {
+	public destroy(): void {
 		this.subscriber.unsubscribeFromStore();
 		(<Array<Instance>>this.components).forEach((component) => component.destroy());
 	}

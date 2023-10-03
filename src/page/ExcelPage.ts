@@ -9,6 +9,7 @@ import { Header } from '../components/header/Header';
 import { Formula } from '../components/formula/Formula';
 import { Table } from '../components/table/Table';
 import { normalizeInitialState } from '../redux/initialState';
+import { DomInstance } from '../core/dom';
 
 function storageName(param: string) {
 	return 'excel:' + param;
@@ -17,7 +18,7 @@ function storageName(param: string) {
 export class ExcelPage extends Page {
 	private excel!: Excel;
 
-	public getRoot() {
+	public getRoot(): DomInstance {
 		const params = this.params ? this.params : Date.now().toString();
 
 		const state = storage(storageName(params)); // получаем state(excel:123) из local storage
@@ -29,7 +30,7 @@ export class ExcelPage extends Page {
 			, normalizeInitialState(state) // инициализация state, загрузка данных из local store,
 		);													// если данных в local store нет, инициализируем его шаблонным объектом
 
-		const stateListenes = debounce((state: State) => { // блокируем вызов ф-ции, если появился новый вызов этой ф-ции
+		const stateListenes = debounce((state: State): void => { // блокируем вызов ф-ции, если появился новый вызов этой ф-ции
 			if(process.env.NODE_ENV === 'development') {
 				console.log('App State: ', state);
 			}
@@ -51,11 +52,11 @@ export class ExcelPage extends Page {
 		return this.excel.getRoot();
 	}
 
-	public afterRender() {
+	public afterRender(): void {
 		this.excel.init();
 	}
 
-	public destroy() {
+	public destroy(): void {
 		this.excel.destroy();
 	}
 }

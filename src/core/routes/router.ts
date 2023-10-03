@@ -24,12 +24,12 @@ export class Router {
 		this.init(); // инициализация адресной строки
 	}
 
-	private init() {
+	private init(): void {
 		window.addEventListener('hashchange', this.changePageHandler);
 		this.changePageHandler();
 	}
 
-	public changePageHandler() {
+	public changePageHandler(): void {
 		if (this.page) {
 			this.page.destroy();
 		}
@@ -44,12 +44,12 @@ export class Router {
 		this.page = new Page(ActiveRoute.param);	// создание страници,
 		//																				// param - параметром передаются данные из адресной строки
 
-		this.$placeholder.append(this.page.getRoot()); // вставляем верстку в корневой элемент '#app'
+		this.$placeholder.append(this.page.getRoot()); // вставляем -=HTML=- верстку в корневой элемент '#app'
 
 		this.page.afterRender(); // отрисовка вставленного содержимого
 	}
 
-	public destroy() {
+	public destroy(): void {
 		window.removeEventListener('hashchange', this.changePageHandler);
 	}
 }
